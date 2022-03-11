@@ -53,9 +53,7 @@ public class RegisterController {
 
     private boolean isEmailIllegal(String email) {
         Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
-        return !emailRegex
-                .matcher(email)
-                .matches();
+        return !emailRegex.matcher(email).matches();
     }
 
     public boolean isEmailDuplicate(String email) {
@@ -64,9 +62,7 @@ public class RegisterController {
 
     private boolean isPasswordIllegal(String pwd) {
         Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
-        return !pwdRegex
-                .matcher(pwd)
-                .matches();
+        return !pwdRegex.matcher(pwd).matches();
     }
 
     private String generatedName() {
