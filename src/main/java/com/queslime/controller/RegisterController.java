@@ -38,7 +38,7 @@ public class RegisterController {
         }
 
         User newUser = new User(
-                generatedName(),
+                "User_" + System.currentTimeMillis(),
                 userEmail,
                 Encoder.encode(userPassword)
         );
@@ -63,10 +63,5 @@ public class RegisterController {
     private boolean isPasswordIllegal(String pwd) {
         Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
         return !pwdRegex.matcher(pwd).matches();
-    }
-
-    private String generatedName() {
-        long currentTime = System.currentTimeMillis();
-        return "User_" + currentTime;
     }
 }
