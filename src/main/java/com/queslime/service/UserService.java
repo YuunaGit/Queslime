@@ -18,7 +18,9 @@ public class UserService {
     }
     // Retrieve
     public User selectOneWhereEmailEquals(String email) {
-        return userMapper.selectOne(new QueryWrapper<User>().eq("user_email", email));
+        return userMapper.selectOne(
+                new QueryWrapper<User>().eq("user_email", email)
+        );
     }
     // Update
 }
