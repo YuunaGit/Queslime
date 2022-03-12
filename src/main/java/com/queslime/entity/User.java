@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @ToString
@@ -21,6 +23,7 @@ public class User {
     private String userEmail;
     private String userPassword;
     private UserStatus userStatus;
+    private Timestamp createdAt;
 
     public User(String userName, String userEmail, String userPassword) {
         this.userName = userName;

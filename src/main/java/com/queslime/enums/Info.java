@@ -16,7 +16,10 @@ public enum Info {
 
     ACTIVATE_UID_ILLEGAL(120, "用户UID非法"),
     ACTIVATE_UID_NOT_EXISTS(121, "用户不存在"),
-    ACTIVATE_ALREADY_ACTIVATED(122, "账号已经激活");
+    ACTIVATE_ALREADY_ACTIVATED(122, "账号已经激活"),
+    ACTIVATE_EMAIL_SEND(123, "邮件成功发送"),
+    ACTIVATE_SUCCESS(124, "账号激活成功"),
+    ACTIVATE_FAIL(125, "错误代码");
 
     private final int code;
     private final String msg;

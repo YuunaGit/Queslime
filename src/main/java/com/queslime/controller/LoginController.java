@@ -14,7 +14,7 @@ public class LoginController {
     @RequestMapping("/login")
     public Result loginUser(@RequestParam(value = "email", defaultValue = "")String userEmail,
                             @RequestParam(value = "password", defaultValue = "")String userPassword) {
-        Result result = new Result(null);
+        Result result = new Result();
         return result;
     }
 

@@ -20,7 +20,7 @@ public class RegisterController {
     @RequestMapping(value = "/register")
     public Result registerUser(@RequestParam(value = "email", defaultValue = "")String userEmail,
                                @RequestParam(value = "password", defaultValue = "")String userPassword) {
-        Result result = new Result(null);
+        Result result = new Result();
 
         if("".equals(userEmail)) {
             return result.info(Info.REGISTER_EMAIL_NULL);

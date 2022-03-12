@@ -10,9 +10,7 @@ public class Result {
     private Info info;
     private Object data;
 
-    public Result(Object data) {
-        this.data = data;
-    }
+    public Result() {}
 
     public Result info(Info info) {
         this.info = info;
