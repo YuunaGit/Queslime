@@ -38,7 +38,7 @@ public class RegisterController {
         }
 
         User newUser = new User(
-                "User_" + (System.currentTimeMillis()),
+                "User_" + System.currentTimeMillis(),
                 userEmail,
                 Encoder.encode(userPassword)
         );
