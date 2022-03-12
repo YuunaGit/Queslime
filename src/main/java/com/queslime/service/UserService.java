@@ -29,4 +29,7 @@ public class UserService {
     }
 
     // Update
+    public int update(User user) {
+        return userMapper.updateById(user);
+    }
 }
