@@ -15,6 +15,7 @@ import lombok.ToString;
 @TableName(schema = "queslime", value = "e_user")
 public class User {
     @TableId(type = IdType.AUTO)
+    private Integer uid;
     private String userName;
     private String userEmail;
     private String userPassword;
