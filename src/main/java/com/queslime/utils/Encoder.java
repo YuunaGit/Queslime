@@ -3,7 +3,7 @@ package com.queslime.utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class Encoder {
-    private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
 
     private Encoder() {}
 
