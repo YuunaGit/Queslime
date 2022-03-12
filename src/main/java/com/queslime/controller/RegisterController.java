@@ -23,28 +23,23 @@ public class RegisterController {
         Result result = new Result(null);
 
         if("".equals(userEmail)) {
-            result.setInfo(Info.REGISTER_EMAIL_NULL);
-            return result;
+            return result.info(Info.REGISTER_EMAIL_NULL);
         }
 
         if("".equals(userPassword)) {
-            result.setInfo(Info.REGISTER_PWD_NULL);
-            return result;
+            return result.info(Info.REGISTER_PWD_NULL);
         }
 
         if(isEmailIllegal(userEmail)) {
-            result.setInfo(Info.REGISTER_EMAIL_ILLEGAL);
-            return result;
+            return result.info(Info.REGISTER_EMAIL_ILLEGAL);
         }
 
         if(isEmailDuplicate(userEmail)) {
-            result.setInfo(Info.REGISTER_EMAIL_DUPLICATE);
-            return result;
+            return result.info(Info.REGISTER_EMAIL_DUPLICATE);
         }
 
         if(isPasswordIllegal(userPassword)) {
-            result.setInfo(Info.REGISTER_PWD_ILLEGAL);
-            return result;
+            return result.info(Info.REGISTER_PWD_ILLEGAL);
         }
 
         User newUser = new User(
@@ -54,11 +49,10 @@ public class RegisterController {
         );
 
         if(userService.insert(newUser) != 0) {
-            result.setInfo(Info.REGISTER_SUCCESS);
+            return result.info(Info.REGISTER_SUCCESS);
         } else {
-            result.setInfo(Info.REGISTER_FAIL);
+            return result.info(Info.REGISTER_FAIL);
         }
-        return result;
     }
 
     private boolean isEmailIllegal(String email) {
@@ -67,7 +61,7 @@ public class RegisterController {
     }
 
     public boolean isEmailDuplicate(String email) {
-        return userService.selectOneWhereEmailEquals(email) != null;
+        return userService.selectOneByEmail(email) != null;
     }
 
     private boolean isPasswordIllegal(String pwd) {

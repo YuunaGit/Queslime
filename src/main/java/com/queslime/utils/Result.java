@@ -4,8 +4,8 @@ import com.queslime.enums.Info;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class Result {
     private Info info;
     private Object data;
@@ -14,8 +14,8 @@ public class Result {
         this.data = data;
     }
 
-    public Result(Info info, Object data) {
+    public Result info(Info info) {
         this.info = info;
-        this.data = data;
+        return this;
     }
 }

@@ -16,11 +16,17 @@ public class UserService {
     public int insert(User user) {
         return userMapper.insert(user);
     }
+
     // Retrieve
-    public User selectOneWhereEmailEquals(String email) {
+    public User selectOneByUid(int uid) {
+        return userMapper.selectById(uid);
+    }
+
+    public User selectOneByEmail(String email) {
         return userMapper.selectOne(
                 new QueryWrapper<User>().eq("user_email", email)
         );
     }
+
     // Update
 }
