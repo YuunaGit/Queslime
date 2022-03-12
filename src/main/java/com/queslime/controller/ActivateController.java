@@ -21,6 +21,8 @@ public class ActivateController {
     @Resource
     private EmailSender emailSender;
 
+    private final int XOR_NUM = 0x1A2F;
+
     @RequestMapping(value = "/user/activate")
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
         Result result = new Result();
@@ -62,22 +64,24 @@ public class ActivateController {
         String[] code = codeString.split("g");
 
         int uid = Integer.parseInt(code[0], 16);
-        uid ^= 0x1A2F;
+        uid ^= XOR_NUM;
         long createdAt = Long.parseLong(code[1], 16);
 
         User user = userService.selectOneByUid(uid);
 
         if(user.getCreatedAt().getTime() == createdAt) {
-            return result.info(Info.ACTIVATE_SUCCESS);
-        } else {
-            return result.info(Info.ACTIVATE_FAIL);
+            user.setUserStatus(UserStatus.NORMAL);
+            if (userService.update(user) != 0) {
+                return result.info(Info.ACTIVATE_SUCCESS);
+            }
         }
+        return result.info(Info.ACTIVATE_FAIL);
     }
 
     private String generatedActivateCode(User user) {
         int uid = user.getUid();
-        uid ^= 0x1A2F;
+        uid ^= XOR_NUM;
         Timestamp createdAt = user.getCreatedAt();
-        return Integer.toHexString(uid) + "g" + Long.toHexString(createdAt.getTime());
+        return Integer.toHexString(uid) + "h" + Long.toHexString(createdAt.getTime());
     }
 }
