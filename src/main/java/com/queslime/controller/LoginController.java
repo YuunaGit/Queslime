@@ -12,16 +12,10 @@ public class LoginController {
     private UserService userService;
 
     @RequestMapping("/login")
-    public Result loginUserAsEmail(@RequestParam(value = "email")String userEmail,
-                                   @RequestParam(value = "password")String userPassword) {
+    public Result loginUser(@RequestParam(value = "email")String userEmail,
+                            @RequestParam(value = "password")String userPassword) {
         Result result = new Result(null);
         return result;
     }
 
-    @RequestMapping("/login")
-    public Result loginUserAsUsername(@RequestParam(value = "email")String userEmail,
-                                      @RequestParam(value = "password")String userPassword) {
-        Result result = new Result(null);
-        return result;
-    }
 }
