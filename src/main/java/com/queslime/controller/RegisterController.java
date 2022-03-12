@@ -22,6 +22,16 @@ public class RegisterController {
                                @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result(null);
 
+        if("".equals(userEmail)) {
+            result.setInfo(Info.REGISTER_EMAIL_NULL);
+            return result;
+        }
+
+        if("".equals(userPassword)) {
+            result.setInfo(Info.REGISTER_PWD_NULL);
+            return result;
+        }
+
         if(isEmailIllegal(userEmail)) {
             result.setInfo(Info.REGISTER_EMAIL_ILLEGAL);
             return result;
