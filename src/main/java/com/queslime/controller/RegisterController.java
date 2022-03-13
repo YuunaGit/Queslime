@@ -50,9 +50,9 @@ public class RegisterController {
 
         if(userService.insert(newUser) != 0) {
             return result.info(Info.REGISTER_SUCCESS);
-        } else {
-            return result.info(Info.REGISTER_FAIL);
         }
+
+        return result.info(Info.REGISTER_FAIL);
     }
 
     private boolean isEmailIllegal(String email) {
