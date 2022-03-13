@@ -20,8 +20,6 @@ public class ActivateController {
     @Resource
     private EmailSender emailSender;
 
-    private int XOR_NUM = 0xABCD;
-
     @RequestMapping(value = "/user/activate")
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
         Result result = new Result();
