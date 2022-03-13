@@ -43,12 +43,15 @@ public class ActivateController {
             return result.info(Info.ACTIVATE_ALREADY_ACTIVATED);
         }
 
+        int createdAt = user.getCreatedAt().getNanos();
+        uid ^= createdAt;
+        String code = Long.toHexString((long) createdAt << 32 | uid);
+
         emailSender.sendMail(
                 user.getUserEmail(),
                 "欢迎使用Queslime",
                 "请点击下方链接激活账号吧！\n\n" +
-                        "http://localhost:9090/user/activate/verify?code=" +
-                        generatedActivateCode(user)
+                        "http://localhost:9090/user/activate/verify?code=" + code
         );
 
         return result.info(Info.ACTIVATE_EMAIL_SEND);
@@ -82,12 +85,5 @@ public class ActivateController {
             }
         }
         return result.info(Info.ACTIVATE_FAIL);
-    }
-
-    private String generatedActivateCode(User user) {
-        int uid = user.getUid();
-        int createdAt = user.getCreatedAt().getNanos();
-        uid ^= createdAt;
-        return Long.toHexString((long) createdAt << 32 | uid);
     }
 }
