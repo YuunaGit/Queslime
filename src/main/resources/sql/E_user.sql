@@ -5,5 +5,5 @@ create table e_user(
     user_email tinytext not null,
     user_password tinytext not null,
     user_status tinyint not null,
-    created_at timestamp default current_timestamp
+    created_at timestamp(6) default current_timestamp(6) not null
 );
