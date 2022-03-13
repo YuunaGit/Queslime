@@ -66,7 +66,7 @@ public class ActivateController {
             return result.info(Info.ACTIVATE_FAIL);
         }
 
-        int uid = (int) (code & (long) -1);
+        int uid = (int) code;
         int createdAt = (int) (code >> 32);
         uid ^= createdAt;
 
