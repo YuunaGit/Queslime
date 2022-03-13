@@ -68,12 +68,13 @@ public class ActivateController {
             return result.info(Info.ACTIVATE_FAIL);
         }
 
-        int uid = (int) (code & 0x00000000FFFFFFFFL);
+        int uid = (int) (code & (long) -1);
         int createdAt = (int) (code >> 32);
+        uid ^= createdAt;
 
         User user = userService.selectOneByUid(uid);
 
-        if(user.getCreatedAt().getTime() == createdAt) {
+        if(createdAt == user.getCreatedAt().getNanos()) {
             user.setUserStatus(UserStatus.NORMAL);
             if (userService.update(user) != 0) {
                 return result.info(Info.ACTIVATE_SUCCESS);
@@ -85,7 +86,7 @@ public class ActivateController {
     private String generatedActivateCode(User user) {
         int uid = user.getUid();
         int createdAt = user.getCreatedAt().getNanos();
-        long code = (long) createdAt << 32 | uid;
-        return Long.toHexString(code);
+        uid ^= createdAt;
+        return Long.toHexString((long) createdAt << 32 | uid);
     }
 }
