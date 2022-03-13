@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.HashMap;
 
 @RestController
 public class ActivateController {
@@ -21,7 +20,7 @@ public class ActivateController {
     @Resource
     private EmailSender emailSender;
 
-    private final int XOR_NUM = 0x1A2F;
+    private int XOR_NUM = 0xABCD;
 
     @RequestMapping(value = "/user/activate")
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
@@ -51,7 +50,8 @@ public class ActivateController {
                 user.getUserEmail(),
                 "欢迎使用Queslime",
                 "请点击下方链接激活账号吧！\n\n" +
-                        "http://localhost:9090/user/activate/verify?code=" + generatedActivateCode(user)
+                        "http://localhost:9090/user/activate/verify?code=" +
+                        generatedActivateCode(user)
         );
 
         return result.info(Info.ACTIVATE_EMAIL_SEND);
@@ -61,11 +61,15 @@ public class ActivateController {
     public Result accountActivate(@RequestParam(value = "code", defaultValue = "")String codeString) {
         Result result = new Result();
 
-        String[] code = codeString.split("g");
+        long code;
+        try {
+            code = Long.parseLong(codeString, 16);
+        } catch (NumberFormatException e) {
+            return result.info(Info.ACTIVATE_FAIL);
+        }
 
-        int uid = Integer.parseInt(code[0], 16);
-        uid ^= XOR_NUM;
-        long createdAt = Long.parseLong(code[1], 16);
+        int uid = (int) (code & 0x00000000FFFFFFFFL);
+        int createdAt = (int) (code >> 32);
 
         User user = userService.selectOneByUid(uid);
 
@@ -80,8 +84,8 @@ public class ActivateController {
 
     private String generatedActivateCode(User user) {
         int uid = user.getUid();
-        uid ^= XOR_NUM;
-        Timestamp createdAt = user.getCreatedAt();
-        return Integer.toHexString(uid) + "h" + Long.toHexString(createdAt.getTime());
+        int createdAt = user.getCreatedAt().getNanos();
+        long code = (long) createdAt << 32 | uid;
+        return Long.toHexString(code);
     }
 }
