@@ -72,6 +72,10 @@ public class ActivateController {
 
         User user = userService.selectOneByUid(uid);
 
+        if(user == null) {
+            return result.info(Info.ACTIVATE_FAIL);
+        }
+
         if(createdAt == user.getCreatedAt().getNanos()) {
             user.setUserStatus(UserStatus.NORMAL);
             if (userService.update(user) != 0) {
