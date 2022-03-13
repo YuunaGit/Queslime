@@ -19,7 +19,12 @@ public enum Info {
     ACTIVATE_ALREADY_ACTIVATED(122, "账号已经激活"),
     ACTIVATE_EMAIL_SEND(123, "邮件成功发送"),
     ACTIVATE_SUCCESS(124, "账号激活成功"),
-    ACTIVATE_FAIL(125, "错误代码");
+    ACTIVATE_FAIL(125, "错误代码"),
+
+    LOGIN_EMAIL_NULL(130, "邮箱不能为空"),
+    LOGIN_PWD_NULL(131, "密码不能为空"),
+    LOGIN_EMAIL_OR_PWD_WRONG(132, "邮箱或密码错误"),
+    LOGIN_SUCCESS(133, "登录成功");
 
     private final int code;
     private final String msg;
