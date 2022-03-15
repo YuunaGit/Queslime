@@ -17,7 +17,7 @@ public class UserInfoController {
 
     @RequestMapping("/update/user/name")
     public Result updateUserProfile(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                    @RequestParam(value = "newName", defaultValue = "")String nameString) {
+                                    @RequestParam(value = "newName", defaultValue = "")String newUserame) {
         Result result = new Result();
 
         int uid = userService.stringToUid(uidString);
@@ -28,6 +28,10 @@ public class UserInfoController {
         User user = userService.selectOneByUid(uid);
         if(user == null) {
             return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        if("".equals(newUserame)) {
+            return result.info(Info.USER_NAME_NULL);
         }
 
         return result;
