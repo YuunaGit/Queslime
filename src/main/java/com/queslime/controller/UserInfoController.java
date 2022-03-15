@@ -34,6 +34,12 @@ public class UserInfoController {
             return result.info(Info.USER_NAME_NULL);
         }
 
-        return result;
+        user.setUserName(newUserName);
+
+        if(userService.update(user) == 0) {
+            return result.info(Info.FAIL);
+        }
+
+        return result.info(Info.SUCCESS);
     }
 }

@@ -59,7 +59,7 @@ public class ActivateController {
         try {
             code = Long.parseLong(codeString, 16);
         } catch (NumberFormatException e) {
-            return result.info(Info.ACTIVATE_FAIL);
+            return result.info(Info.FAIL);
         }
 
         int uid = (int) code;
@@ -69,15 +69,15 @@ public class ActivateController {
         User user = userService.selectOneByUid(uid);
 
         if(user == null) {
-            return result.info(Info.ACTIVATE_FAIL);
+            return result.info(Info.FAIL);
         }
 
         if(createdAt == user.getCreatedAt().getNanos()) {
             user.setUserStatus(UserStatus.NORMAL);
             if (userService.update(user) != 0) {
-                return result.info(Info.ACTIVATE_SUCCESS);
+                return result.info(Info.SUCCESS);
             }
         }
-        return result.info(Info.ACTIVATE_FAIL);
+        return result.info(Info.FAIL);
     }
 }

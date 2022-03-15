@@ -30,14 +30,14 @@ public class LoginController {
         User user = userService.selectOneByEmail(userEmail);
 
         if(user == null) {
-            return result.info(Info.LOGIN_EMAIL_OR_PWD_WRONG);
+            return result.info(Info.FAIL);
         }
 
         if(Encoder.match(userPassword, user.getUserPassword())) {
-            return result.info(Info.LOGIN_SUCCESS);
+            return result.info(Info.SUCCESS);
         }
 
-        return result.info(Info.LOGIN_EMAIL_OR_PWD_WRONG);
+        return result.info(Info.FAIL);
     }
 
 }
