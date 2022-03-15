@@ -20,11 +20,11 @@ public class LoginController {
         Result result = new Result();
 
         if("".equals(userEmail)) {
-            return result.info(Info.LOGIN_EMAIL_NULL);
+            return result.info(Info.EMAIL_NULL);
         }
 
         if("".equals(userPassword)) {
-            return result.info(Info.LOGIN_PWD_NULL);
+            return result.info(Info.PWD_NULL);
         }
 
         User user = userService.selectOneByEmail(userEmail);
