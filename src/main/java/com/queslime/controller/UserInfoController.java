@@ -1,7 +1,11 @@
 package com.queslime.controller;
 
+import com.queslime.entity.User;
+import com.queslime.enums.Info;
 import com.queslime.service.UserService;
 import com.queslime.utils.Result;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -11,9 +15,20 @@ public class UserInfoController {
     @Resource
     private UserService userService;
 
-    public Result updateUserProfile() {
+    @RequestMapping("/update/user/name")
+    public Result updateUserProfile(@RequestParam(value = "uid", defaultValue = "")String uidString,
+                                    @RequestParam(value = "newName", defaultValue = "")String nameString) {
         Result result = new Result();
-        // TODO: 2022/3/13  
+
+        int uid = userService.stringToUid(uidString);
+        if(uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if(user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
 
         return result;
     }
