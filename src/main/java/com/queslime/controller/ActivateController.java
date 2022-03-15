@@ -45,13 +45,13 @@ public class ActivateController {
                 user.getUserEmail(),
                 "欢迎使用Queslime",
                 "请点击下方链接激活账号吧！\n\n" +
-                        "http://localhost:9090/user/activate/verify?code=" + code
+                        "http://localhost:9090/user/activate/check?code=" + code
         );
 
         return result.info(Info.ACTIVATE_EMAIL_SEND);
     }
 
-    @RequestMapping(value = "/user/activate/verify")
+    @RequestMapping(value = "/user/activate/check")
     public Result accountActivate(@RequestParam(value = "code", defaultValue = "")String codeString) {
         Result result = new Result();
 
