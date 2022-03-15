@@ -6,13 +6,14 @@ import lombok.Getter;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Info {
-    // Public
+    // Public: Uid
     UID_ILLEGAL(101, "用户UID非法"),
     UID_NOT_EXISTS(102, "用户不存在"),
+    // Public: Not null
+    EMAIL_NULL(103, "邮箱不能为空"),
+    PWD_NULL(104, "密码不能为空"),
     // Register
     REGISTER_SUCCESS(110, "注册账号成功"),
-    REGISTER_EMAIL_NULL(111, "邮箱不能为空"),
-    REGISTER_PWD_NULL(112, "密码不能为空"),
     REGISTER_EMAIL_ILLEGAL(113, "非法邮箱格式"),
     REGISTER_EMAIL_DUPLICATE(114, "邮箱已被使用"),
     REGISTER_PWD_ILLEGAL(115,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
@@ -24,8 +25,6 @@ public enum Info {
     ACTIVATE_FAIL(123, "错误代码"),
     // Login
     LOGIN_SUCCESS(130, "登录成功"),
-    LOGIN_EMAIL_NULL(131, "邮箱不能为空"),
-    LOGIN_PWD_NULL(132, "密码不能为空"),
     LOGIN_EMAIL_OR_PWD_WRONG(133, "邮箱或密码错误");
 
 
