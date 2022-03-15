@@ -6,6 +6,9 @@ import lombok.Getter;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Info {
+    // Public
+    UID_ILLEGAL(101, "用户UID非法"),
+    UID_NOT_EXISTS(102, "用户不存在"),
     // Register
     REGISTER_SUCCESS(110, "注册账号成功"),
     REGISTER_EMAIL_NULL(111, "邮箱不能为空"),
@@ -16,11 +19,9 @@ public enum Info {
     REGISTER_FAIL(116, "注册账号失败"),
     // Activate
     ACTIVATE_SUCCESS(120, "账号激活成功"),
-    ACTIVATE_UID_ILLEGAL(121, "用户UID非法"),
-    ACTIVATE_UID_NOT_EXISTS(122, "用户不存在"),
-    ACTIVATE_ALREADY_ACTIVATED(123, "账号已经激活"),
-    ACTIVATE_EMAIL_SEND(124, "邮件成功发送"),
-    ACTIVATE_FAIL(125, "错误代码"),
+    ACTIVATE_ALREADY_ACTIVATED(121, "账号已经激活"),
+    ACTIVATE_EMAIL_SEND(122, "邮件成功发送"),
+    ACTIVATE_FAIL(123, "错误代码"),
     // Login
     LOGIN_SUCCESS(130, "登录成功"),
     LOGIN_EMAIL_NULL(131, "邮箱不能为空"),

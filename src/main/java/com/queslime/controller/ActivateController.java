@@ -27,16 +27,16 @@ public class ActivateController {
         try {
             uid = Integer.parseInt(uidString);
         } catch (NumberFormatException e) {
-            return result.info(Info.ACTIVATE_UID_ILLEGAL);
+            return result.info(Info.UID_ILLEGAL);
         }
 
         if(uid < 1) {
-            return result.info(Info.ACTIVATE_UID_ILLEGAL);
+            return result.info(Info.UID_ILLEGAL);
         }
 
         User user = userService.selectOneByUid(uid);
         if(user == null) {
-            return result.info(Info.ACTIVATE_UID_NOT_EXISTS);
+            return result.info(Info.UID_NOT_EXISTS);
         }
 
         if(user.getUserStatus() != UserStatus.NOT_ACTIVATED) {
