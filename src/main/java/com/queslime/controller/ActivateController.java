@@ -23,14 +23,8 @@ public class ActivateController {
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
         Result result = new Result();
 
-        int uid;
-        try {
-            uid = Integer.parseInt(uidString);
-        } catch (NumberFormatException e) {
-            return result.info(Info.UID_ILLEGAL);
-        }
-
-        if(uid < 1) {
+        int uid = userService.stringToUid(uidString);
+        if(uid == 0) {
             return result.info(Info.UID_ILLEGAL);
         }
 
