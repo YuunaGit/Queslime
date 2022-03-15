@@ -22,11 +22,11 @@ public class RegisterController {
         Result result = new Result();
 
         if("".equals(userEmail)) {
-            return result.info(Info.REGISTER_EMAIL_NULL);
+            return result.info(Info.EMAIL_NULL);
         }
 
         if("".equals(userPassword)) {
-            return result.info(Info.REGISTER_PWD_NULL);
+            return result.info(Info.PWD_NULL);
         }
 
         if(userService.isEmailIllegal(userEmail)) {
