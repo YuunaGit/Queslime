@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.regex.Pattern;
 
 @RestController
 public class RegisterController {
@@ -30,20 +29,20 @@ public class RegisterController {
             return result.info(Info.REGISTER_PWD_NULL);
         }
 
-        if(isEmailIllegal(userEmail)) {
+        if(userService.isEmailIllegal(userEmail)) {
             return result.info(Info.REGISTER_EMAIL_ILLEGAL);
         }
 
-        if(isEmailDuplicate(userEmail)) {
+        if(userService.isEmailDuplicate(userEmail)) {
             return result.info(Info.REGISTER_EMAIL_DUPLICATE);
         }
 
-        if(isPasswordIllegal(userPassword)) {
+        if(userService.isPasswordIllegal(userPassword)) {
             return result.info(Info.REGISTER_PWD_ILLEGAL);
         }
 
         User newUser = new User(
-                generatedUserName(),
+                userService.generatedUserName(),
                 userEmail,
                 Encoder.encode(userPassword)
         );
@@ -53,25 +52,5 @@ public class RegisterController {
         }
 
         return result.info(Info.REGISTER_FAIL);
-    }
-
-    private boolean isEmailIllegal(String email) {
-        Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
-        return !emailRegex.matcher(email).matches();
-    }
-
-    public boolean isEmailDuplicate(String email) {
-        return userService.selectOneByEmail(email) != null;
-    }
-
-    private boolean isPasswordIllegal(String pwd) {
-        Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
-        return !pwdRegex.matcher(pwd).matches();
-    }
-
-    private String generatedUserName() {
-        long time = System.currentTimeMillis();
-        long curr = 0x17F7B000000L;
-        return "User_" + Long.toHexString(time - curr);
     }
 }
