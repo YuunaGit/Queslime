@@ -2,7 +2,6 @@ package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.queslime.entity.User;
-import com.queslime.enums.Info;
 import com.queslime.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,9 @@ import java.util.regex.Pattern;
 public class UserService {
     @Resource
     private UserMapper userMapper;
+
+    private final Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
+    private final Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
 
     // Create
     public int insert(User user) {
@@ -50,7 +52,6 @@ public class UserService {
     }
 
     public boolean isEmailIllegal(String email) {
-        Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
         return !emailRegex.matcher(email).matches();
     }
 
@@ -59,7 +60,6 @@ public class UserService {
     }
 
     public boolean isPasswordIllegal(String pwd) {
-        Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
         return !pwdRegex.matcher(pwd).matches();
     }
 
