@@ -29,6 +29,10 @@ public class RegisterController {
             return result.info(Info.PWD_NULL);
         }
 
+        if(userEmail.length() >= 100) {
+            return result.info(Info.REGISTER_EMAIL_TOO_LONG);
+        }
+
         if(userService.isEmailIllegal(userEmail)) {
             return result.info(Info.REGISTER_EMAIL_ILLEGAL);
         }
