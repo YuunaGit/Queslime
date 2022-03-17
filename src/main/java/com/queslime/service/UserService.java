@@ -13,8 +13,13 @@ public class UserService {
     @Resource
     private UserMapper userMapper;
 
-    private final Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
-    private final Pattern pwdRegex = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$");
+    private final static Pattern emailRegex = Pattern.compile(
+            "^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$"
+    );
+
+    private final static Pattern pwdRegex = Pattern.compile(
+            "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$"
+    );
 
     // Create
     public int insert(User user) {
