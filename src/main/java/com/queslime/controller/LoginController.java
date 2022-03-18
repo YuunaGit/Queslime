@@ -14,9 +14,9 @@ public class LoginController {
     @Resource
     private UserService userService;
 
-    @RequestMapping("/login")
-    public Result loginUser(@RequestParam(value = "email", defaultValue = "")String userEmail,
-                            @RequestParam(value = "password", defaultValue = "")String userPassword) {
+    @RequestMapping("/login/email")
+    public Result loginUserByEmail(@RequestParam(value = "email", defaultValue = "")String userEmail,
+                                   @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result();
 
         if("".equals(userEmail)) {
@@ -29,6 +29,30 @@ public class LoginController {
 
         User user = userService.selectOneByEmail(userEmail);
 
+        return loginUser(user, userPassword);
+    }
+
+    @RequestMapping("/login/account")
+    public Result loginUserByAccount(@RequestParam(value = "account", defaultValue = "")String userAccount,
+                                     @RequestParam(value = "password", defaultValue = "")String userPassword) {
+        Result result = new Result();
+
+        if("".equals(userAccount)) {
+            return result.info(Info.EMAIL_NULL);
+        }
+
+        if("".equals(userPassword)) {
+            return result.info(Info.PWD_NULL);
+        }
+
+        User user = userService.selectOneByAccount(userAccount);
+
+        return loginUser(user, userPassword);
+    }
+
+    private Result loginUser(User user, String userPassword) {
+        Result result = new Result();
+
         if(user == null) {
             return result.info(Info.FAIL);
         }
@@ -39,5 +63,4 @@ public class LoginController {
 
         return result.info(Info.FAIL);
     }
-
 }
