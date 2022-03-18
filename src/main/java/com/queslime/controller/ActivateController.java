@@ -78,6 +78,7 @@ public class ActivateController {
                 return result.info(Info.FAIL);
             }
         }
+
         return result.info(Info.SUCCESS);
     }
 }
