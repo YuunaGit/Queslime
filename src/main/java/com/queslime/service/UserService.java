@@ -37,6 +37,12 @@ public class UserService {
         );
     }
 
+    public User selectOneByAccount(String account) {
+        return userMapper.selectOne(
+                new QueryWrapper<User>().eq("user_account", account)
+        );
+    }
+
     // Update
     public int update(User user) {
         return userMapper.updateById(user);
@@ -62,6 +68,10 @@ public class UserService {
 
     public boolean isEmailDuplicate(String email) {
         return selectOneByEmail(email) != null;
+    }
+
+    public boolean isAccountDuplicate(String account) {
+        return selectOneByAccount(account) != null;
     }
 
     public boolean isPasswordIllegal(String pwd) {
