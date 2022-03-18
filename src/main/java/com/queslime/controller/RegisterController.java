@@ -18,11 +18,16 @@ public class RegisterController {
 
     @RequestMapping(value = "/register")
     public Result registerUser(@RequestParam(value = "email", defaultValue = "")String userEmail,
+                               @RequestParam(value = "account", defaultValue = "")String userAccount,
                                @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result();
 
         if("".equals(userEmail)) {
             return result.info(Info.EMAIL_NULL);
+        }
+
+        if("".equals(userAccount)) {
+            return result.info(Info.ACCOUNT_NULL);
         }
 
         if("".equals(userPassword)) {
@@ -48,6 +53,7 @@ public class RegisterController {
         User newUser = new User(
                 userService.generatedUserName(),
                 userEmail,
+                userAccount,
                 Encoder.encode(userPassword)
         );
 
