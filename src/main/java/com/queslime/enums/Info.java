@@ -22,7 +22,8 @@ public enum Info {
     REGISTER_EMAIL_DUPLICATE(212, "邮箱已被使用"),
     REGISTER_ACCOUNT_DUPLICATE(213, "账户名已被使用"),
     REGISTER_EMAIL_TOO_LONG(214, "邮箱长度过长"),
-    REGISTER_PWD_ILLEGAL(215,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
+    REGISTER_ACCOUNT_TOO_LONG(215, "账户名长度过长"),
+    REGISTER_PWD_ILLEGAL(216,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
     // Activate
     ACTIVATE_ALREADY_ACTIVATED(220, "账号已经激活"),
     ACTIVATE_EMAIL_SEND(221, "邮件成功发送");
