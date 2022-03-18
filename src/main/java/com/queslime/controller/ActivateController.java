@@ -19,7 +19,7 @@ public class ActivateController {
     @Resource
     private EmailSender emailSender;
 
-    @RequestMapping(value = "/user/activate")
+    @RequestMapping(value = "/activate/user")
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
         Result result = new Result();
 
@@ -45,13 +45,13 @@ public class ActivateController {
                 user.getUserEmail(),
                 "欢迎使用Queslime",
                 "请点击下方链接激活账号吧！\n\n" +
-                        "http://localhost:9090/user/activate/check?code=" + code
+                        "http://localhost:9090/activate/check?code=" + code
         );
 
         return result.info(Info.ACTIVATE_EMAIL_SEND);
     }
 
-    @RequestMapping(value = "/user/activate/check")
+    @RequestMapping(value = "/activate/check")
     public Result accountActivate(@RequestParam(value = "code", defaultValue = "")String codeString) {
         Result result = new Result();
 
