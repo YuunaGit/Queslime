@@ -46,6 +46,10 @@ public class RegisterController {
             return result.info(Info.REGISTER_EMAIL_DUPLICATE);
         }
 
+        if(userService.isAccountDuplicate(userAccount)) {
+            return result.info(Info.REGISTER_ACCOUNT_DUPLICATE);
+        }
+
         if(userService.isPasswordIllegal(userPassword)) {
             return result.info(Info.REGISTER_PWD_ILLEGAL);
         }
