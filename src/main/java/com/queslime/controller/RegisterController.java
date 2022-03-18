@@ -34,12 +34,20 @@ public class RegisterController {
             return result.info(Info.PWD_NULL);
         }
 
-        if(userEmail.length() >= 100) {
+        if(userEmail.length() >= 200) {
             return result.info(Info.REGISTER_EMAIL_TOO_LONG);
+        }
+
+        if(userAccount.length() >= 200) {
+            return result.info(Info.REGISTER_ACCOUNT_TOO_LONG);
         }
 
         if(userService.isEmailIllegal(userEmail)) {
             return result.info(Info.REGISTER_EMAIL_ILLEGAL);
+        }
+
+        if(userService.isPasswordIllegal(userPassword)) {
+            return result.info(Info.REGISTER_PWD_ILLEGAL);
         }
 
         if(userService.isEmailDuplicate(userEmail)) {
@@ -50,10 +58,6 @@ public class RegisterController {
             return result.info(Info.REGISTER_ACCOUNT_DUPLICATE);
         }
 
-        if(userService.isPasswordIllegal(userPassword)) {
-            return result.info(Info.REGISTER_PWD_ILLEGAL);
-        }
-
         User newUser = new User(
                 userService.generatedUserName(),
                 userEmail,
@@ -61,10 +65,10 @@ public class RegisterController {
                 Encoder.encode(userPassword)
         );
 
-        if(userService.insert(newUser) != 0) {
-            return result.info(Info.SUCCESS);
+        if(userService.insert(newUser) == 0) {
+            return result.info(Info.FAIL);
         }
 
-        return result.info(Info.FAIL);
+        return result.info(Info.SUCCESS);
     }
 }
