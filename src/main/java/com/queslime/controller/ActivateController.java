@@ -74,10 +74,10 @@ public class ActivateController {
 
         if(createdAt == user.getCreatedAt().getNanos()) {
             user.setUserStatus(UserStatus.NORMAL);
-            if (userService.update(user) != 0) {
-                return result.info(Info.SUCCESS);
+            if (userService.update(user) == 0) {
+                return result.info(Info.FAIL);
             }
         }
-        return result.info(Info.FAIL);
+        return result.info(Info.SUCCESS);
     }
 }
