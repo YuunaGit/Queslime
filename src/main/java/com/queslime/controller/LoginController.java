@@ -32,24 +32,6 @@ public class LoginController {
         return loginUser(user, userPassword);
     }
 
-    @RequestMapping("/login/account")
-    public Result loginUserByAccount(@RequestParam(value = "account", defaultValue = "")String userAccount,
-                                     @RequestParam(value = "password", defaultValue = "")String userPassword) {
-        Result result = new Result();
-
-        if("".equals(userAccount)) {
-            return result.info(Info.EMAIL_NULL);
-        }
-
-        if("".equals(userPassword)) {
-            return result.info(Info.PWD_NULL);
-        }
-
-        User user = userService.selectOneByAccount(userAccount);
-
-        return loginUser(user, userPassword);
-    }
-
     private Result loginUser(User user, String userPassword) {
         Result result = new Result();
 
