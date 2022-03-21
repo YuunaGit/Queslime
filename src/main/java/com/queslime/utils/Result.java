@@ -16,4 +16,10 @@ public class Result {
         this.info = info;
         return this;
     }
+
+    public Result info(Info info, Object data) {
+        this.info = info;
+        this.data = data;
+        return this;
+    }
 }
