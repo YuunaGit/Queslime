@@ -76,16 +76,16 @@ public class UserService {
         return !emailRegex.matcher(email).matches();
     }
 
+    public boolean isPasswordIllegal(String pwd) {
+        return !pwdRegex.matcher(pwd).matches();
+    }
+
     public boolean isEmailDuplicate(String email) {
         return selectOneByEmail(email) != null;
     }
 
     public boolean isUserNameDuplicate(String userName) {
         return selectOneByUserName(userName) != null;
-    }
-
-    public boolean isPasswordIllegal(String pwd) {
-        return !pwdRegex.matcher(pwd).matches();
     }
 
     public String generatedUserName() {
