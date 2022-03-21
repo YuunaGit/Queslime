@@ -5,12 +5,15 @@ import com.queslime.enums.Info;
 import com.queslime.service.UserService;
 import com.queslime.utils.Encoder;
 import com.queslime.utils.Result;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
+@CrossOrigin
 @RestController
 public class RegisterController {
     @Resource
@@ -69,6 +72,14 @@ public class RegisterController {
             return result.info(Info.FAIL);
         }
 
-        return result.info(Info.SUCCESS);
+        User user = userService.selectOneByEmail(userEmail);
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("uid", user.getUid().toString());
+        data.put("user_name", user.getUserName());
+        data.put("user_email", user.getUserEmail());
+        data.put("user_account", user.getUserAccount());
+
+        return result.info(Info.SUCCESS, data);
     }
 }
