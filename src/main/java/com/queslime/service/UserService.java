@@ -27,6 +27,11 @@ public class UserService {
         return userMapper.insert(user);
     }
 
+    // Update
+    public int update(User user) {
+        return userMapper.updateById(user);
+    }
+
     // Retrieve
     public User selectOneByUid(int uid) {
         return userMapper.selectById(uid);
@@ -38,15 +43,10 @@ public class UserService {
         );
     }
 
-    public User selectOneByUserName(String username) {
+    public User selectOneByUserName(String userName) {
         return userMapper.selectOne(
-                new QueryWrapper<User>().eq("user_name", username)
+                new QueryWrapper<User>().eq("user_name", userName)
         );
-    }
-
-    // Update
-    public int update(User user) {
-        return userMapper.updateById(user);
     }
 
     // Wrapper
