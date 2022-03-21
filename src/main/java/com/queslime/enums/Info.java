@@ -25,7 +25,7 @@ public enum Info {
     REGISTER_ACCOUNT_TOO_LONG(215, "账户名长度过长"),
     REGISTER_PWD_ILLEGAL(216,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
     // Activate
-    ACTIVATE_ALREADY_ACTIVATED(220, "账号已经激活"),
+    ACTIVATE_ALREADY_ACTIVATED(220, "账号已经激活过了"),
     ACTIVATE_EMAIL_SEND(221, "邮件成功发送");
 
     private final int code;
