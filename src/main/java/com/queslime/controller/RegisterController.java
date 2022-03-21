@@ -21,16 +21,11 @@ public class RegisterController {
 
     @RequestMapping(value = "/register")
     public Result registerUser(@RequestParam(value = "email", defaultValue = "")String userEmail,
-                               @RequestParam(value = "account", defaultValue = "")String userAccount,
                                @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result();
 
         if("".equals(userEmail)) {
             return result.info(Info.EMAIL_NULL);
-        }
-
-        if("".equals(userAccount)) {
-            return result.info(Info.ACCOUNT_NULL);
         }
 
         if("".equals(userPassword)) {
@@ -39,10 +34,6 @@ public class RegisterController {
 
         if(userEmail.length() >= 200) {
             return result.info(Info.REGISTER_EMAIL_TOO_LONG);
-        }
-
-        if(userAccount.length() >= 200) {
-            return result.info(Info.REGISTER_ACCOUNT_TOO_LONG);
         }
 
         if(userService.isEmailIllegal(userEmail)) {
@@ -57,14 +48,9 @@ public class RegisterController {
             return result.info(Info.REGISTER_EMAIL_DUPLICATE);
         }
 
-        if(userService.isAccountDuplicate(userAccount)) {
-            return result.info(Info.REGISTER_ACCOUNT_DUPLICATE);
-        }
-
         User newUser = new User(
                 userService.generatedUserName(),
                 userEmail,
-                userAccount,
                 Encoder.encode(userPassword)
         );
 
