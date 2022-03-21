@@ -6,6 +6,7 @@ import com.queslime.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 @Service
@@ -46,6 +47,16 @@ public class UserService {
     // Update
     public int update(User user) {
         return userMapper.updateById(user);
+    }
+
+    // Wrapper
+    public HashMap<String, String> userWrapper(User user) {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("uid", user.getUid().toString());
+        data.put("user_name", user.getUserName());
+        data.put("user_email", user.getUserEmail());
+        data.put("user_account", user.getUserAccount());
+        return data;
     }
 
     // Service
