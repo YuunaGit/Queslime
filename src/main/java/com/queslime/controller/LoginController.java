@@ -5,16 +5,20 @@ import com.queslime.enums.Info;
 import com.queslime.service.UserService;
 import com.queslime.utils.Encoder;
 import com.queslime.utils.Result;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+@CrossOrigin
+@RestController
 public class LoginController {
     @Resource
     private UserService userService;
 
-    @RequestMapping("/login/email")
+    @RequestMapping(value = "/login/email")
     public Result loginUserByEmail(@RequestParam(value = "email", defaultValue = "")String userEmail,
                                    @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result();
@@ -32,13 +36,13 @@ public class LoginController {
         return loginUser(user, userPassword);
     }
 
-    @RequestMapping("/login/name")
+    @RequestMapping(value = "/login/name")
     public Result loginUserByUserName(@RequestParam(value = "username", defaultValue = "")String userName,
                                       @RequestParam(value = "password", defaultValue = "")String userPassword) {
         Result result = new Result();
 
         if("".equals(userName)) {
-            return result.info(Info.EMAIL_NULL);
+            return result.info(Info.USER_NAME_NULL);
         }
 
         if("".equals(userPassword)) {
@@ -57,10 +61,12 @@ public class LoginController {
             return result.info(Info.FAIL);
         }
 
-        if(Encoder.match(userPassword, user.getUserPassword())) {
-            return result.info(Info.SUCCESS);
+        if(!Encoder.match(userPassword, user.getUserPassword())) {
+            return result.info(Info.FAIL);
         }
 
-        return result.info(Info.FAIL);
+        var data = userService.userWrapper(user);
+
+        return result.info(Info.SUCCESS, data);
     }
 }
