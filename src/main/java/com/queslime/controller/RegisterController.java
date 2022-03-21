@@ -73,12 +73,7 @@ public class RegisterController {
         }
 
         User user = userService.selectOneByEmail(userEmail);
-
-        HashMap<String, String> data = new HashMap<>();
-        data.put("uid", user.getUid().toString());
-        data.put("user_name", user.getUserName());
-        data.put("user_email", user.getUserEmail());
-        data.put("user_account", user.getUserAccount());
+        var data = userService.userWrapper(user);
 
         return result.info(Info.SUCCESS, data);
     }
