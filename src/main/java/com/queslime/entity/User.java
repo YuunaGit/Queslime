@@ -21,15 +21,13 @@ public class User {
     private Integer uid;
     private String userName;
     private String userEmail;
-    private String userAccount;
     private String userPassword;
     private UserStatus userStatus;
     private Timestamp createdAt;
 
-    public User(String userName, String userEmail, String userAccount, String userPassword) {
+    public User(String userName, String userEmail, String userPassword) {
         this.userName = userName;
         this.userEmail = userEmail;
-        this.userAccount = userAccount;
         this.userPassword = userPassword;
         this.userStatus = UserStatus.NOT_ACTIVATED;
     }
