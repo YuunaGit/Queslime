@@ -50,9 +50,9 @@ public class UserService {
     }
 
     // Wrapper
-    public HashMap<String, String> userWrapper(User user) {
-        var data = new HashMap<String, String>();
-        data.put("uid", user.getUid().toString());
+    public HashMap<String, Object> userWrapper(User user) {
+        var data = new HashMap<String, Object>();
+        data.put("uid", user.getUid());
         data.put("user_name", user.getUserName());
         data.put("user_email", user.getUserEmail());
         data.put("user_account", user.getUserAccount());
