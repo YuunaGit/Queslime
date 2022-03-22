@@ -44,4 +44,32 @@ public class UserInfoController {
 
         return result.info(Info.SUCCESS);
     }
+
+    @RequestMapping("/update/user/name")
+    public Result updateUserEmail(@RequestParam(value = "uid", defaultValue = "")String uidString,
+                                  @RequestParam(value = "newEmail", defaultValue = "")String newEmail) {
+        Result result = new Result();
+
+        int uid = userService.stringToUid(uidString);
+        if(uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if(user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        if("".equals(newEmail)) {
+            return result.info(Info.USER_NAME_NULL);
+        }
+
+        user.setUserEmail(newEmail);
+
+        if(userService.update(user) == 0) {
+            return result.info(Info.FAIL);
+        }
+
+        return result.info(Info.SUCCESS);
+    }
 }
