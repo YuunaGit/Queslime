@@ -36,7 +36,7 @@ public class ActivateController {
         }
 
         if(user.getUserStatus() != UserStatus.NOT_ACTIVATED) {
-            return result.info(Info.ACTIVATE_ALREADY_ACTIVATED);
+            return result.info(Info.ALREADY_ACTIVATED);
         }
 
         int createdAt = user.getCreatedAt().getNanos();
@@ -50,7 +50,7 @@ public class ActivateController {
                         "http://localhost:9090/activate/check?code=" + code
         );
 
-        return result.info(Info.ACTIVATE_EMAIL_SEND);
+        return result.info(Info.EMAIL_SEND);
     }
 
     @RequestMapping(value = "/activate/check")
