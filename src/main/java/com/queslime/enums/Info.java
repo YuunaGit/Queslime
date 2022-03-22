@@ -18,13 +18,15 @@ public enum Info {
     SUCCESS(200, "成功"),
     FAIL(201, "失败"),
     // Register
-    REGISTER_EMAIL_ILLEGAL(211, "非法邮箱格式"),
-    REGISTER_EMAIL_DUPLICATE(212, "邮箱已被使用"),
-    REGISTER_EMAIL_TOO_LONG(213, "邮箱长度过长"),
-    REGISTER_PWD_ILLEGAL(214,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
+    REGISTER_EMAIL_ILLEGAL(210, "非法邮箱格式"),
+    REGISTER_EMAIL_DUPLICATE(211, "邮箱已被使用"),
+    REGISTER_EMAIL_TOO_LONG(212, "邮箱长度过长"),
+    REGISTER_PWD_ILLEGAL(213,"密码长度应在6到20位之间，且至少包含一个字母和一个数字"),
     // Activate
     ACTIVATE_ALREADY_ACTIVATED(220, "账号已经激活过了"),
-    ACTIVATE_EMAIL_SEND(221, "邮件成功发送");
+    ACTIVATE_EMAIL_SEND(221, "邮件成功发送"),
+    // Update
+    UPDATE_USER_NAME_DUPLICATE(231, "用户名重复");
 
     private final int code;
     private final String msg;
