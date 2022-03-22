@@ -21,7 +21,7 @@ public class ProfileController {
 
     @RequestMapping("/update/user/name")
     public Result updateUserName(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                 @RequestParam(value = "newName", defaultValue = "")String newUserName) {
+                                 @RequestParam(value = "username", defaultValue = "")String newUserName) {
         Result result = new Result();
 
         if("".equals(uidString)) {
@@ -56,7 +56,7 @@ public class ProfileController {
 
     @RequestMapping("/update/user/email")
     public Result updateUserEmail(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                  @RequestParam(value = "newEmail", defaultValue = "")String newEmail) {
+                                  @RequestParam(value = "email", defaultValue = "")String newEmail) {
         Result result = new Result();
 
         if("".equals(uidString)) {
@@ -92,7 +92,7 @@ public class ProfileController {
 
     @RequestMapping("/update/user/password")
     public Result updateUserPwd(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                @RequestParam(value = "newPassword", defaultValue = "")String newPassword) {
+                                @RequestParam(value = "password", defaultValue = "")String newPassword) {
         Result result = new Result();
 
         if("".equals(uidString)) {
