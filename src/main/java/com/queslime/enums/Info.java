@@ -10,9 +10,10 @@ public enum Info {
     UID_ILLEGAL(100, "用户UID非法"),
     UID_NOT_EXISTS(101, "用户不存在"),
     // Public: Not null
-    EMAIL_NULL(110, "邮箱不能为空"),
-    PWD_NULL(111, "密码不能为空"),
-    USER_NAME_NULL(112, "用户名不能为空"),
+    UID_NULL(110, "UID不能为空"),
+    EMAIL_NULL(111, "邮箱不能为空"),
+    PWD_NULL(112, "密码不能为空"),
+    USER_NAME_NULL(113, "用户名不能为空"),
     // Public: Success or Fail
     SUCCESS(200, "成功"),
     FAIL(201, "失败"),
