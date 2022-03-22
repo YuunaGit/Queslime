@@ -23,7 +23,11 @@ public class ProfileController {
         Result result = new Result();
 
         if("".equals(uidString)) {
-            return result.info(Info.UID)
+            return result.info(Info.UID_NULL);
+        }
+
+        if("".equals(newUserName)) {
+            return result.info(Info.USER_NAME_NULL);
         }
 
         int uid = userService.stringToUid(uidString);
@@ -36,8 +40,8 @@ public class ProfileController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        if("".equals(newUserName)) {
-            return result.info(Info.USER_NAME_NULL);
+        if(userService.isUserNameDuplicate(newUserName)) {
+            return result.info(Info.USER_NAME_DUPLICATE);
         }
 
         user.setUserName(newUserName);
@@ -54,6 +58,14 @@ public class ProfileController {
                                   @RequestParam(value = "newEmail", defaultValue = "")String newEmail) {
         Result result = new Result();
 
+        if("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        if("".equals(newEmail)) {
+            return result.info(Info.EMAIL_NULL);
+        }
+
         int uid = userService.stringToUid(uidString);
         if(uid == 0) {
             return result.info(Info.UID_ILLEGAL);
@@ -64,8 +76,8 @@ public class ProfileController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        if("".equals(newEmail)) {
-            return result.info(Info.EMAIL_NULL);
+        if(userService.isEmailDuplicate(newEmail)) {
+            return result.info(Info.EMAIL_DUPLICATE);
         }
 
         user.setUserEmail(newEmail);
