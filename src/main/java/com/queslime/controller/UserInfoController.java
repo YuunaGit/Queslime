@@ -45,7 +45,7 @@ public class UserInfoController {
         return result.info(Info.SUCCESS);
     }
 
-    @RequestMapping("/update/user/name")
+    @RequestMapping("/update/user/email")
     public Result updateUserEmail(@RequestParam(value = "uid", defaultValue = "")String uidString,
                                   @RequestParam(value = "newEmail", defaultValue = "")String newEmail) {
         Result result = new Result();
@@ -61,7 +61,7 @@ public class UserInfoController {
         }
 
         if("".equals(newEmail)) {
-            return result.info(Info.USER_NAME_NULL);
+            return result.info(Info.EMAIL_NULL);
         }
 
         user.setUserEmail(newEmail);
