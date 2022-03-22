@@ -32,19 +32,19 @@ public class RegisterController {
         }
 
         if(userEmail.length() >= 100) {
-            return result.info(Info.REGISTER_EMAIL_TOO_LONG);
+            return result.info(Info.EMAIL_TOO_LONG);
         }
 
         if(userService.isEmailIllegal(userEmail)) {
-            return result.info(Info.REGISTER_EMAIL_ILLEGAL);
+            return result.info(Info.EMAIL_ILLEGAL);
         }
 
         if(userService.isPasswordIllegal(userPassword)) {
-            return result.info(Info.REGISTER_PWD_ILLEGAL);
+            return result.info(Info.PWD_ILLEGAL);
         }
 
         if(userService.isEmailDuplicate(userEmail)) {
-            return result.info(Info.REGISTER_EMAIL_DUPLICATE);
+            return result.info(Info.EMAIL_DUPLICATE);
         }
 
         User newUser = new User(
