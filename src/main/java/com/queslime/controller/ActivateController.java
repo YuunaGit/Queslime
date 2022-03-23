@@ -3,6 +3,7 @@ package com.queslime.controller;
 import com.queslime.entity.User;
 import com.queslime.enums.Info;
 import com.queslime.enums.entityEnum.UserStatus;
+import com.queslime.service.CodeCache;
 import com.queslime.service.UserService;
 import com.queslime.utils.EmailSender;
 import com.queslime.utils.Result;
@@ -20,6 +21,8 @@ public class ActivateController {
     private UserService userService;
     @Resource
     private EmailSender emailSender;
+    @Resource
+    private CodeCache codeCache;
 
     @RequestMapping(value = "/activate/user")
     public Result accountActivateSendEmail(@RequestParam(value = "uid", defaultValue = "")String uidString) {
@@ -39,11 +42,10 @@ public class ActivateController {
             return result.info(Info.ALREADY_ACTIVATED);
         }
 
-        // TODO random Code
-        int randomCode = 1964196419;
-        uid ^= randomCode;
-        
-        String code = Long.toHexString((long) randomCode << 32 | uid);
+        int key = codeCache.generateRandomCode();
+        codeCache.putCode(uid, Integer.toString(key));
+        uid ^= key;
+        String code = Long.toHexString((long) key << 32 | uid);
 
         emailSender.sendMail(
                 user.getUserEmail(),
@@ -66,8 +68,8 @@ public class ActivateController {
         }
 
         int uid = (int) code;
-        int createdAt = (int) (code >> 32);
-        uid ^= createdAt;
+        int key = (int) (code >> 32);
+        uid ^= key;
 
         User user = userService.selectOneByUid(uid);
 
@@ -75,7 +77,7 @@ public class ActivateController {
             return result.info(Info.FAIL);
         }
 
-        if(createdAt == user.getCreatedAt().getNanos()) {
+        if(codeCache.validateCode(uid, Integer.toString(key))) {
             user.setUserStatus(UserStatus.NORMAL);
             if (userService.update(user) == 0) {
                 return result.info(Info.FAIL);
