@@ -7,7 +7,7 @@ import java.util.Hashtable;
 @Service
 public class CodeCache {
     private final Hashtable<Integer, String> cache = new Hashtable<>();
-    // TODO THIS FUCKING CODE!!!
+    // TODO GENERATE THIS FUCKING CODE!!!
     public int generateRandomCode() {
         int code = (int) (System.currentTimeMillis() >> 32);
         code ^= (int) System.currentTimeMillis();
