@@ -41,7 +41,8 @@ public class ActivateController {
 
         int createdAt = (int) user.getCreatedAt().getTime();
         uid ^= createdAt;
-        // random code TODO
+        // random code
+        // TODO
         int randomCode = 1964196419;
         String code = Long.toHexString((long) randomCode << 32 | uid);
 
