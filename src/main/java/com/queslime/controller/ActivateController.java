@@ -46,8 +46,7 @@ public class ActivateController {
         emailSender.sendMail(
                 user.getUserEmail(),
                 "欢迎使用Queslime",
-                "请点击下方链接激活账号吧！\n\n" +
-                        "http://localhost:9090/activate/check?code=" + code
+                "请点击下方链接激活账号吧！\n\nhttp://localhost:9090/activate/check?code=" + code
         );
 
         return result.info(Info.EMAIL_SEND);
