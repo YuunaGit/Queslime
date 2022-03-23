@@ -39,9 +39,11 @@ public class ActivateController {
             return result.info(Info.ALREADY_ACTIVATED);
         }
 
-        int createdAt = user.getCreatedAt().getNanos();
+        int createdAt = (int) user.getCreatedAt().getTime();
         uid ^= createdAt;
-        String code = Long.toHexString((long) createdAt << 32 | uid);
+        // random code TODO
+        int randomCode = 1964196419;
+        String code = Long.toHexString((long) randomCode << 32 | uid);
 
         emailSender.sendMail(
                 user.getUserEmail(),
