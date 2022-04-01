@@ -38,7 +38,7 @@ public class ActivateController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        if(user.getUserStatus() != UserStatus.NOT_ACTIVATED) {
+        if(user.getUserState() != UserStatus.NOT_ACTIVATED) {
             return result.info(Info.ALREADY_ACTIVATED);
         }
 
@@ -78,7 +78,7 @@ public class ActivateController {
         }
 
         if(codeCache.validateCode(uid, Integer.toString(key))) {
-            user.setUserStatus(UserStatus.NORMAL);
+            user.setUserState(UserStatus.NORMAL);
             if (userService.update(user) == 0) {
                 return result.info(Info.FAIL);
             }
