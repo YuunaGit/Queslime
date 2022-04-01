@@ -22,13 +22,13 @@ public class User {
     private String userName;
     private String userEmail;
     private String userPassword;
-    private UserStatus userStatus;
+    private UserStatus userState;
     private Timestamp createdAt;
 
     public User(String userName, String userEmail, String userPassword) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
-        this.userStatus = UserStatus.NOT_ACTIVATED;
+        this.userState = UserStatus.NOT_ACTIVATED;
     }
 }
