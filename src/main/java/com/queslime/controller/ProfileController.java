@@ -2,7 +2,7 @@ package com.queslime.controller;
 
 import com.queslime.entity.User;
 import com.queslime.enums.Info;
-import com.queslime.enums.entityEnum.UserStatus;
+import com.queslime.enums.entityEnum.UserState;
 import com.queslime.service.UserService;
 import com.queslime.utils.Encoder;
 import com.queslime.utils.Result;
@@ -82,7 +82,7 @@ public class ProfileController {
         }
 
         user.setUserEmail(newEmail);
-        user.setUserStatus(UserStatus.NOT_ACTIVATED);
+        user.setUserState(UserState.NOT_ACTIVATED);
         if(userService.update(user) == 0) {
             return result.info(Info.FAIL);
         }
