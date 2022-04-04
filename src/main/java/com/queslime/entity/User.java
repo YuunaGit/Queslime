@@ -3,7 +3,7 @@ package com.queslime.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.queslime.enums.entityEnum.UserStatus;
+import com.queslime.enums.entityEnum.UserState;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,13 +22,13 @@ public class User {
     private String userName;
     private String userEmail;
     private String userPassword;
-    private UserStatus userState;
+    private UserState userState;
     private Timestamp createdAt;
 
     public User(String userName, String userEmail, String userPassword) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
-        this.userState = UserStatus.NOT_ACTIVATED;
+        this.userState = UserState.NOT_ACTIVATED;
     }
 }
