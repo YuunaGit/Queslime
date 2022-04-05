@@ -55,6 +55,7 @@ public class UserService {
         data.put("uid", user.getUid());
         data.put("user_name", user.getUserName());
         data.put("user_email", user.getUserEmail());
+        data.put("user_state", user.getUserState());
         return data;
     }
 
