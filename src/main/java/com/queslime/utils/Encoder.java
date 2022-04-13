@@ -11,7 +11,7 @@ public class Encoder {
         return bCryptPasswordEncoder.encode(plainText);
     }
 
-    public static boolean match(String plainText, String cipherText){
-        return bCryptPasswordEncoder.matches(plainText, cipherText);
+    public static boolean notMatch(String plainText, String cipherText){
+        return !bCryptPasswordEncoder.matches(plainText, cipherText);
     }
 }
