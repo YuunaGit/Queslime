@@ -118,8 +118,8 @@ public class ProfileController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        if(Encoder.match(oldPassword, newPassword)) {
-            return result.info(Info.FAIL);
+        if(Encoder.notMatch(oldPassword, user.getUserPassword())) {
+            return result.info(Info.PWD_WRONG);
         }
 
         user.setUserPassword(Encoder.encode(newPassword));
