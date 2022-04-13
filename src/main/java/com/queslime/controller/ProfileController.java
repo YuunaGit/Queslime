@@ -32,6 +32,10 @@ public class ProfileController {
             return result.info(Info.USER_NAME_NULL);
         }
 
+        if(newUserName.length() >= 30) {
+            return result.info(Info.USER_NAME_TOO_LONG);
+        }
+
         int uid = userService.stringToUid(uidString);
         if(uid == 0) {
             return result.info(Info.UID_ILLEGAL);
@@ -92,7 +96,8 @@ public class ProfileController {
 
     @RequestMapping("/update/user/password")
     public Result updateUserPwd(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                @RequestParam(value = "password", defaultValue = "")String newPassword) {
+                                @RequestParam(value = "old_password", defaultValue = "")String oldPassword,
+                                @RequestParam(value = "new_password", defaultValue = "")String newPassword) {
         Result result = new Result();
 
         if("".equals(uidString)) {
@@ -111,6 +116,10 @@ public class ProfileController {
         User user = userService.selectOneByUid(uid);
         if(user == null) {
             return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        if(Encoder.match(oldPassword, newPassword)) {
+            return result.info(Info.FAIL);
         }
 
         user.setUserPassword(Encoder.encode(newPassword));
