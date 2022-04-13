@@ -61,7 +61,7 @@ public class LoginController {
             return result.info(Info.FAIL);
         }
 
-        if(!Encoder.match(userPassword, user.getUserPassword())) {
+        if(Encoder.notMatch(userPassword, user.getUserPassword())) {
             return result.info(Info.FAIL);
         }
 
