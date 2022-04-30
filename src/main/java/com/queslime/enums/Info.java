@@ -15,6 +15,8 @@ public enum Info {
     EMAIL_NULL(111, "邮箱不能为空"),
     PWD_NULL(112, "密码不能为空"),
     USER_NAME_NULL(113, "用户名不能为空"),
+    QUESTION_NULL(114, "问题不能为空"),
+    TAGS_NULL(115, "Tag不能为空"),
 
     // Public: Duplicate
     EMAIL_DUPLICATE(120, "邮箱已被使用"),
