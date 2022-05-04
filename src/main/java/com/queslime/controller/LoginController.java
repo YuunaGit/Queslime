@@ -65,8 +65,8 @@ public class LoginController {
             return result.info(Info.FAIL);
         }
 
-        var data = userService.userWrapper(user);
+        var userData = userService.userWrapper(user);
 
-        return result.info(Info.SUCCESS, data);
+        return result.info(Info.SUCCESS, userData);
     }
 }
