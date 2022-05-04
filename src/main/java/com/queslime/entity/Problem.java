@@ -19,10 +19,8 @@ public class Problem {
     private Integer uid;
     private String problemContent;
 
-    public Problem(Integer pid, Integer uid, String problemContext) {
-        this.pid = pid;
+    public Problem(Integer uid, String problemContent) {
         this.uid = uid;
-        this.problemContent = problemContext;
+        this.problemContent = problemContent;
     }
 }
-
