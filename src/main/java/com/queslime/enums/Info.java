@@ -39,7 +39,10 @@ public enum Info {
     EMAIL_SEND(221, "邮件成功发送"),
 
     // Update
-    PWD_WRONG(230, "旧密码不正确");
+    PWD_WRONG(230, "旧密码不正确"),
+
+    // Problem
+    PROBLEM_TAG_ILLEGAL(240, "tag非法格式");
 
     private final int code;
     private final String msg;
