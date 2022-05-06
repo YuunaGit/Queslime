@@ -27,7 +27,7 @@ public class ProblemController {
     @RequestMapping(value = "/post/problem")
     public Result postProblem(@RequestParam(value = "uid", defaultValue = "")String uidString,
                               @RequestParam(value = "content", defaultValue = "")String content,
-                              @RequestParam(value = "tags", defaultValue = "")String[] tagsString) {
+                              @RequestParam(value = "tags", defaultValue = "")String[] tagsIdString) {
         Result result = new Result();
 
         if("".equals(uidString)) {
@@ -38,7 +38,7 @@ public class ProblemController {
             return result.info(Info.QUESTION_NULL);
         }
 
-        if(tagsString.length == 0) {
+        if(tagsIdString.length == 0) {
             return result.info(Info.TAGS_NULL);
         }
 
@@ -63,17 +63,17 @@ public class ProblemController {
 
         int pid = problemService.selectCount();
 
-        int tagsCount = tagsString.length;
-        int[] tags = new int[tagsCount];
+        int tagsCount = tagsIdString.length;
+        int[] tagsId = new int[tagsCount];
         for(int i = 0; i < tagsCount; i++) {
             try {
-                tags[i] = Integer.parseInt(tagsString[i]);
+                tagsId[i] = Integer.parseInt(tagsIdString[i]);
             } catch (NumberFormatException e) {
                 return result.info(Info.PROBLEM_TAG_ILLEGAL);
             }
         }
 
-        for(int tid : tags) {
+        for(int tid : tagsId) {
             ProblemWithTags pwt = new ProblemWithTags(pid, tid);
             if(problemWithTagsService.insert(pwt) == 0) {
                 return result.info(Info.FAIL);
