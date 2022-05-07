@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @ToString
@@ -18,6 +20,7 @@ public class Problem {
     private Integer pid;
     private Integer uid;
     private String problemContent;
+    private Timestamp createdAt;
 
     public Problem(Integer uid, String problemContent) {
         this.uid = uid;
