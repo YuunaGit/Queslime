@@ -38,6 +38,10 @@ public class ProblemController {
             return result.info(Info.QUESTION_NULL);
         }
 
+        if(content.length() > 10000) {
+            return result.info(Info.PROBLEM_CONTENT_TOO_LONG);
+        }
+
         if(tagsIdString.length == 0) {
             return result.info(Info.TAGS_NULL);
         }
@@ -81,5 +85,13 @@ public class ProblemController {
         }
 
         return result.info(Info.SUCCESS);
+    }
+
+    @RequestMapping(value = "/get/problem")
+    public Result getProblem(@RequestParam(value = "by", defaultValue = "")String by) {
+        Result result = new Result();
+
+
+        return result;
     }
 }
