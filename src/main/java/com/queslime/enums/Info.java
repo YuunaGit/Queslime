@@ -25,6 +25,7 @@ public enum Info {
     // Public: Length limit
     EMAIL_TOO_LONG(210, "邮箱长度大于100"),
     USER_NAME_TOO_LONG(211, "UID长度大于30"),
+    PROBLEM_CONTENT_TOO_LONG(212, "问题内容大于10000"),
 
     // Public: Success or Fail
     SUCCESS(200, "成功"),
