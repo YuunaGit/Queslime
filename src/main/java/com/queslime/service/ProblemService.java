@@ -4,12 +4,17 @@ import com.queslime.entity.Problem;
 import com.queslime.mapper.ProblemMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 import javax.annotation.Resource;
 
 @Service
 public class ProblemService {
     @Resource
     private ProblemMapper problemMapper;
+
+    @Resource
+    private UserService userService;
 
     // Create
     public int insert(Problem problem) {
@@ -22,7 +27,7 @@ public class ProblemService {
     }
 
     // Retrieve
-    public Problem selectOneByUid(int pid) {
+    public Problem selectOneByPid(int pid) {
         return problemMapper.selectById(pid);
     }
 
@@ -31,6 +36,27 @@ public class ProblemService {
     }
 
     // Wrapper
+    public HashMap<String, Object> problemWrapper(Problem problem) {
+        var data = new HashMap<String, Object>();
+        data.put("pid", problem.getPid());
+        User user = userService.selectOneByUid(problem.getUid());
+        data.put("user_name", user.getUid());
+        data.put("content", problem.getContent());
+        data.put("created_at", problem.getCreatAt());
+        return data;
+    }
 
     // Service
+    public int stringToPid(String pidString) {
+        int pid;
+        try {
+            pid = Integer.parseInt(pidString);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+        if(pid < 1) {
+            return 0;
+        }
+        return pid;
+    }
 }
