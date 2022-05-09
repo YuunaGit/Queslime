@@ -35,10 +35,10 @@ public class ProblemController {
         }
 
         if("".equals(content)) {
-            return result.info(Info.QUESTION_NULL);
+            return result.info(Info.PROBLEM_NULL);
         }
 
-        if(content.length() > 10000) {
+        if(content.length() > 5000) {
             return result.info(Info.PROBLEM_CONTENT_TOO_LONG);
         }
 
@@ -69,14 +69,14 @@ public class ProblemController {
 
         int tagsCount = tagsIdString.length;
         int[] tagsId = new int[tagsCount];
-        for(int i = 0; i < tagsCount; i++) {
-            try {
+        try {
+            for (int i = 0; i < tagsCount; i++) {
                 tagsId[i] = Integer.parseInt(tagsIdString[i]);
-            } catch (NumberFormatException e) {
-                return result.info(Info.PROBLEM_TAG_ILLEGAL);
             }
+        } catch (NumberFormatException e) {
+            return result.info(Info.PROBLEM_TAG_ILLEGAL);
         }
-
+        
         for(int tid : tagsId) {
             ProblemWithTags pwt = new ProblemWithTags(pid, tid);
             if(problemWithTagsService.insert(pwt) == 0) {
@@ -87,12 +87,15 @@ public class ProblemController {
         return result.info(Info.SUCCESS);
     }
 
-    @RequestMapping(value = "/get/problem")
-    public Result getProblem(@RequestParam(value = "by", defaultValue = "")String by) {
+    @RequestMapping(value = "/get/problems")
+    public Result getProblemsBy(@RequestParam(value = "tags", defaultValue = "") String[] tagsIdString,
+                                @RequestParam(value = "by", defaultValue = "")String by) {
         Result result = new Result();
 
+        //TODO
 
 
         return result;
     }
+    
 }
