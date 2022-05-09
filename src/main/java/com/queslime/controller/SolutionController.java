@@ -20,7 +20,7 @@ public class SolutionController {
                                @RequestParam(value = "uid", defaultValue = "")String uidString,
                                @RequestParam(value = "content", defaultValue = "")String solutionContent) {
         Result result = new Result();
-        
+
 
         return result;
     }
