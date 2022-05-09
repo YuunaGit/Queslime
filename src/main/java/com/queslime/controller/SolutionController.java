@@ -30,45 +30,45 @@ public class SolutionController {
     @RequestMapping(value = "/post/solution")
     public Result postSolution(@RequestParam(value = "pid", defaultValue = "")String pidString,
                                @RequestParam(value = "uid", defaultValue = "")String uidString,
-                               @RequestParam(value = "content", defaultValue = "")String solutionContent) {
+            @RequestParam(value = "content", defaultValue = "") String solutionContent) {
         Result result = new Result();
 
-        if("".equals(pidString)) {
+        if ("".equals(pidString)) {
             return result.info(Info.PID_NULL);
         }
 
-        if("".equals(uidString)) {
+        if ("".equals(uidString)) {
             return result.info(Info.UID_NULL);
         }
 
-        if("".equals(solutionContent)) {
+        if ("".equals(solutionContent)) {
             return result.info(Info.SOLUTION_NULL);
         }
 
-        if(solutionContent.length() > 5000) {
+        if (solutionContent.length() > 5000) {
             return result.info(Info.SOLUTION_CONTENT_TOO_LONG);
         }
 
         int uid = userService.stringToUid(uidString);
-        if(uid == 0) {
+        if (uid == 0) {
             return result.info(Info.UID_ILLEGAL);
         }
 
         User user = userService.selectOneByUid(uid);
-        if(user == null) {
+        if (user == null) {
             return result.info(Info.UID_NOT_EXISTS);
         }
-        
+
         int pid = problemService.stringToPid(pidString);
-        if(pid == 0) {
+        if (pid == 0) {
             return result.info(Info.PID_ILLEGAL);
         }
 
         Problem problem = problemService.selectOneByPid(pid);
-        if(problem == null) {
+        if (problem == null) {
             return result.info(Info.PID_NOT_EXISTS);
         }
-        
+
         Solution newSolution = new Solution(
             problem.getPid(),
             user.getUid(),
@@ -78,7 +78,33 @@ public class SolutionController {
         if (solutionService.insert(newSolution) == 0) {
             return result.info(Info.FAIL);
         }
-    
+
         return result.info(Info.SUCCESS);
+    }
+    
+    @RequestMapping(value = "/get/solutions")
+    public Result getSolutionsBy(@RequestParam(value = "pid", defaultValue = "") String pidString,
+                                 @RequestParam(value = "by", defaultValue = "")String by) {
+        Result result = new Result();
+
+        // By = 最新发布的题解， 点赞最多的题解（默认）， 
+
+        if("".equals(pidString)) {
+            return result.info(Info.PID_NULL);
+        }
+
+        int pid = problemService.stringToPid(pidString);
+        if (pid == 0) {
+            return result.info(Info.PID_ILLEGAL);
+        }
+
+        Problem problem = problemService.selectOneByPid(pid);
+        if (problem == null) {
+            return result.info(Info.PID_NOT_EXISTS);
+        }
+        
+        
+
+        return result;
     }
 }
