@@ -1,6 +1,7 @@
 package com.queslime.service;
 
 import com.queslime.entity.Problem;
+import com.queslime.entity.User;
 import com.queslime.mapper.ProblemMapper;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,8 @@ public class ProblemService {
         data.put("pid", problem.getPid());
         User user = userService.selectOneByUid(problem.getUid());
         data.put("user_name", user.getUid());
-        data.put("content", problem.getContent());
-        data.put("created_at", problem.getCreatAt());
+        data.put("content", problem.getProblemContent());
+        data.put("created_at", problem.getCreatedAt());
         return data;
     }
 
