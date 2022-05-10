@@ -3,5 +3,6 @@ create table e_problem(
    pid int auto_increment primary key,
    uid int not null,
    problem_content text not null,
+   difficulty tinyint not null,
    created_at timestamp default current_timestamp not null
 );
