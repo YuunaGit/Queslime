@@ -6,6 +6,7 @@ import com.queslime.mapper.SolutionMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class SolutionService {
