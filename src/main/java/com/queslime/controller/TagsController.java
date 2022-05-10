@@ -26,7 +26,7 @@ public class TagsController {
         }
 
         result.setData(tagsList);
-        return result;
+        return result.info(Info.SUCCESS);
     }
 
     @RequestMapping(value = "/get/tags")
