@@ -11,6 +11,7 @@ import com.queslime.utils.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -90,12 +91,59 @@ public class ProblemController {
     @RequestMapping(value = "/get/problems")
     public Result getProblemsBy(@RequestParam(value = "search", defaultValue = "")String search,
                                 @RequestParam(value = "tags", defaultValue = "")String[] tagsIdString,
-                                @RequestParam(value = "by", defaultValue = "")String by) {
+                                @RequestParam(value = "order", defaultValue = "")String orderString) {
         Result result = new Result();
 
-        if(tagsIdString.length == 0) {
-
+        // 0: new, 1: hot
+        int order = 0;
+        if("".equals(orderString)) {
+            try {
+                order = Integer.parseInt(orderString);
+            } catch (NumberFormatException e) {
+                return result.info(Info.PROBLEM_TAG_ILLEGAL);
+            }
         }
+
+        List<Problem> problems;
+
+        boolean hasSearch = !"".equals(search);
+        boolean hasTags = tagsIdString.length != 0;
+
+        if(hasSearch) {
+            if(search.length() > 200) {
+                return result.info(Info.PROBLEM_SEARCH_TOO_LONG);
+            }
+        }
+
+        int[] tagsId = new int[0];
+        if(hasTags) {
+            int tagsCount = tagsIdString.length;
+            tagsId = new int[tagsCount];
+            try {
+                for (int i = 0; i < tagsCount; i++) {
+                    tagsId[i] = Integer.parseInt(tagsIdString[i]);
+                }
+            } catch (NumberFormatException e) {
+                return result.info(Info.PROBLEM_TAG_ILLEGAL);
+            }
+        }
+
+        if(!hasSearch && !hasTags) {
+            problems = problemService.selectListAll();
+        } else if(hasSearch && !hasTags) {
+            problems = problemService.selectListBySearch(search);
+        } else if(!hasSearch && hasTags) {
+            problems = problemService.selectListByTags(tagsId);
+        } else {
+            problems = problemService.selectListBySearch(search);
+            problems.retainAll(problemService.selectListByTags(tagsId));
+        }
+
+        switch (order){
+            case 0 -> problems.sort(Comparator.comparingInt(Problem::getPid));
+            case 1 -> problems.sort();
+        }
+
 
         return result;
     }
