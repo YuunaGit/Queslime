@@ -1,11 +1,13 @@
 package com.queslime.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.queslime.entity.Problem;
 import com.queslime.entity.User;
 import com.queslime.mapper.ProblemMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -34,6 +36,20 @@ public class ProblemService {
 
     public int selectCount() {
         return Math.toIntExact(problemMapper.selectCount(null));
+    }
+
+    public List<Problem> selectListAll() {
+        return problemMapper.selectList(null);
+    }
+
+    public List<Problem> selectListBySearch(String search) {
+        return problemMapper.selectList(
+            new QueryWrapper<Problem>().like("problem_content", search)
+        );
+    }
+
+    public List<Problem> selectListByTags(int[] tagsId) {
+
     }
 
     // Wrapper
