@@ -19,6 +19,12 @@ public class ProblemService {
     @Resource
     private UserService userService;
 
+    @Resource
+    private TagService tagService;
+
+    @Resource
+    private ProblemWithTagsService problemWithTagsService;
+
     // Create
     public int insert(Problem problem) {
         return problemMapper.insert(problem);
@@ -49,7 +55,11 @@ public class ProblemService {
     }
 
     public List<Problem> selectListByTags(int[] tagsId) {
+        var problemsIdList = problemWithTagsService.selectProblemsIdByTags(tagsId);
 
+        return problemMapper.selectList(
+            new QueryWrapper<Problem>().in("pid", problemsIdList)
+        );
     }
 
     // Wrapper
@@ -57,6 +67,8 @@ public class ProblemService {
         var data = new HashMap<String, Object>();
         data.put("pid", problem.getPid());
         User user = userService.selectOneByUid(problem.getUid());
+
+        //TODO
         data.put("user_name", user.getUid());
         data.put("content", problem.getProblemContent());
         data.put("created_at", problem.getCreatedAt());
