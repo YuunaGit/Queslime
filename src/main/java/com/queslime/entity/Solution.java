@@ -21,11 +21,13 @@ public class Solution {
     private Integer pid;
     private Integer uid;
     private String solutionContent;
+    private Integer likeCount;
     private Timestamp createdAt;
 
     public Solution(Integer pid, Integer uid, String solutionContent) {
         this.pid = pid;
         this.uid = uid;
         this.solutionContent = solutionContent;
+        this.likeCount = 0;
     }
 }
