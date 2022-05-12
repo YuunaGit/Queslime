@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @CrossOrigin
 @RestController
@@ -30,7 +32,7 @@ public class SolutionController {
     @RequestMapping(value = "/post/solution")
     public Result postSolution(@RequestParam(value = "pid", defaultValue = "")String pidString,
                                @RequestParam(value = "uid", defaultValue = "")String uidString,
-            @RequestParam(value = "content", defaultValue = "") String solutionContent) {
+                               @RequestParam(value = "content", defaultValue = "") String solutionContent) {
         Result result = new Result();
 
         if ("".equals(pidString)) {
@@ -79,32 +81,39 @@ public class SolutionController {
             return result.info(Info.FAIL);
         }
 
-        return result.info(Info.SUCCESS);
+        long sid = solutionService.selectCount();
+        Solution solution = solutionService.selectOneBySid(sid);
+
+        var data = solutionService.solutionWrapper(solution);
+
+        return result.info(Info.SUCCESS, data);
     }
-    
+
     @RequestMapping(value = "/get/solutions")
-    public Result getSolutionsBy(@RequestParam(value = "pid", defaultValue = "") String pidString,
-                                 @RequestParam(value = "by", defaultValue = "")String by) {
+    public Result getSolutionsBy(@RequestParam(value = "uid", defaultValue = "") String uidString) {
         Result result = new Result();
 
-        // By = 最新发布的题解， 点赞最多的题解（默认）， 
-
-        if("".equals(pidString)) {
-            return result.info(Info.PID_NULL);
+        if ("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
         }
 
-        int pid = problemService.stringToPid(pidString);
-        if (pid == 0) {
-            return result.info(Info.PID_ILLEGAL);
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
         }
 
-        Problem problem = problemService.selectOneByPid(pid);
-        if (problem == null) {
-            return result.info(Info.PID_NOT_EXISTS);
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
         }
-        
-        
 
-        return result;
+        var solutionList = solutionService.selectOneByUid(user.getUid());
+
+        var data = new ArrayList<HashMap<String, Object>>();
+        for(Solution s : solutionList) {
+            data.add(solutionService.solutionWrapper(s));
+        }
+
+        return result.info(Info.SUCCESS, data);
     }
 }
