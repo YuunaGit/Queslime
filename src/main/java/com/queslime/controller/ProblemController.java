@@ -28,6 +28,7 @@ public class ProblemController {
     @RequestMapping(value = "/post/problem")
     public Result postProblem(@RequestParam(value = "uid", defaultValue = "")String uidString,
                               @RequestParam(value = "content", defaultValue = "")String content,
+                              @RequestParam(value = "difficulty", defaultValue = "")String difficultyString,
                               @RequestParam(value = "tags", defaultValue = "") String[] tagsIdString) {
         Result result = new Result();
 
@@ -39,12 +40,16 @@ public class ProblemController {
             return result.info(Info.PROBLEM_NULL);
         }
 
-        if (content.length() > 5000) {
-            return result.info(Info.PROBLEM_CONTENT_TOO_LONG);
+        if("".equals(difficultyString)) {
+            return result.info(Info.DIFFICULTY_NULL);
         }
 
         if (tagsIdString.length == 0) {
             return result.info(Info.TAGS_NULL);
+        }
+
+        if (content.length() > 5000) {
+            return result.info(Info.PROBLEM_CONTENT_TOO_LONG);
         }
 
         int uid = userService.stringToUid(uidString);
@@ -57,27 +62,35 @@ public class ProblemController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        Problem newProblem = new Problem(
-                user.getUid(),
-                content);
-
-        int pid = problemService.selectCount() + 1;
+        int difficulty;
+        try {
+            difficulty = Integer.parseInt(difficultyString);
+        } catch (NumberFormatException e) {
+            return result.info(Info.PROBLEM_DIFFICULTY_ILLEGAL);
+        }
 
         int tagsCount = tagsIdString.length;
-        int[] tagsId = new int[tagsCount];
+        int[] tagsIdList = new int[tagsCount];
         try {
             for (int i = 0; i < tagsCount; i++) {
-                tagsId[i] = Integer.parseInt(tagsIdString[i]);
+                tagsIdList[i] = Integer.parseInt(tagsIdString[i]);
             }
         } catch (NumberFormatException e) {
             return result.info(Info.PROBLEM_TAG_ILLEGAL);
         }
 
+        Problem newProblem = new Problem(
+            user.getUid(),
+            content,
+            difficulty
+        );
+
         if (problemService.insert(newProblem) == 0) {
             return result.info(Info.FAIL);
         }
 
-        for (int tid : tagsId) {
+        int pid = problemService.selectCount();
+        for (int tid : tagsIdList) {
             ProblemWithTags pwt = new ProblemWithTags(pid, tid);
             if (problemWithTagsService.insert(pwt) == 0) {
                 return result.info(Info.FAIL);
@@ -133,24 +146,22 @@ public class ProblemController {
 
     @RequestMapping(value = "/get/problems")
     public Result getProblemsBy(@RequestParam(value = "search", defaultValue = "")String search,
-                                @RequestParam(value = "tags", defaultValue = "")String[] tagsIdString,
+                                @RequestParam(value = "tags", defaultValue = "")String[] tidListString,
                                 @RequestParam(value = "order", defaultValue = "")String orderString) {
         Result result = new Result();
 
         // 0: new, 1: hot
         int order = 0;
-        if("".equals(orderString)) {
+        if(!"".equals(orderString)) {
             try {
                 order = Integer.parseInt(orderString);
             } catch (NumberFormatException e) {
-                return result.info(Info.PROBLEM_TAG_ILLEGAL);
+                return result.info(Info.PROBLEM_ORDER_ILLEGAL);
             }
         }
 
-        List<Problem> problems;
-
         boolean hasSearch = !"".equals(search);
-        boolean hasTags = tagsIdString.length != 0;
+        boolean hasTags = tidListString.length != 0;
 
         if(hasSearch) {
             if(search.length() > 200) {
@@ -158,29 +169,26 @@ public class ProblemController {
             }
         }
 
-        int[] tagsId;
+        var tidList = new ArrayList<Integer>();
         if(hasTags) {
-            int tagsCount = tagsIdString.length;
-            tagsId = new int[tagsCount];
             try {
-                for (int i = 0; i < tagsCount; i++) {
-                    tagsId[i] = Integer.parseInt(tagsIdString[i]);
+                for (String tagIdString : tidListString) {
+                    tidList.add(Integer.parseInt(tagIdString));
                 }
             } catch (NumberFormatException e) {
                 return result.info(Info.PROBLEM_TAG_ILLEGAL);
             }
         }
 
+        List<Problem> problems;
         if (hasSearch) {
+            problems = problemService.selectListBySearch(search);
             if (hasTags) {
-                problems = problemService.selectListBySearch(search);
-                problems.retainAll(problemService.selectListByTags(tagsId));
-            } else {
-                problems = problemService.selectListBySearch(search);
+                problems.retainAll(problemService.selectListByTags(tidList));
             }
         } else {
             if (hasTags) {
-                problems = problemService.selectListByTags(tagsId);
+                problems = problemService.selectListByTags(tidList);
             } else {
                 problems = problemService.selectListAll();
             }
@@ -188,20 +196,38 @@ public class ProblemController {
 
         switch (order){
             case 0 -> problems.sort(Comparator.comparingInt(Problem::getPid));
-            case 1 -> problems.sort();
+//            case 1 -> problems.sort();
         }
 
+        var data = new ArrayList<HashMap<String, Object>>();
+        for(Problem p : problems) {
+            data.add(problemService.problemSimpleWrapper(p));
+        }
 
-        return result;
+        return result.info(Info.SUCCESS, data);
     }
 
     @RequestMapping(value = "/get/problem")
     public Result getProblem(@RequestParam(value = "pid", defaultValue = "")String pidString) {
         Result result = new Result();
 
+        if ("".equals(pidString)) {
+            return result.info(Info.PID_NULL);
+        }
 
+        int pid = problemService.stringToPid(pidString);
+        if (pid == 0) {
+            return result.info(Info.PID_ILLEGAL);
+        }
 
-        return result;
+        Problem problem = problemService.selectOneByPid(pid);
+        if (problem == null) {
+            return result.info(Info.PID_NOT_EXISTS);
+        }
+
+        var data = problemService.problemWrapper(problem);
+
+        return result.info(Info.SUCCESS, data);
     }
     
 }
