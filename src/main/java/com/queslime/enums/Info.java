@@ -21,6 +21,7 @@ public enum Info {
     TAGS_NULL(115, "Tag不能为空"),
     PID_NULL(116, "PID不能为空"),
     SOLUTION_NULL(117, "题解不能为空"),
+    DIFFICULTY_NULL(118, "题目难度不能为空"),
 
     // Public: Duplicate
     EMAIL_DUPLICATE(120, "邮箱已被使用"),
@@ -49,7 +50,9 @@ public enum Info {
 
     // Problem
     PROBLEM_TAG_ILLEGAL(240, "tag非法格式"),
-    PROBLEM_SEARCH_TOO_LONG(241, "搜索内容太长，最多200字");
+    PROBLEM_SEARCH_TOO_LONG(241, "搜索内容太长，最多200字"),
+    PROBLEM_ORDER_ILLEGAL(242, "搜索顺序格式非法"),
+    PROBLEM_DIFFICULTY_ILLEGAL(243, "难度数值非法");
 
     private final int code;
     private final String msg;
