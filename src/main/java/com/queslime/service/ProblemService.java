@@ -2,10 +2,13 @@ package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.queslime.entity.Problem;
+import com.queslime.entity.Solution;
+import com.queslime.entity.Tag;
 import com.queslime.entity.User;
 import com.queslime.mapper.ProblemMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class ProblemService {
     private UserService userService;
 
     @Resource
-    private TagService tagService;
+    private SolutionService solutionService;
 
     @Resource
     private ProblemWithTagsService problemWithTagsService;
@@ -54,8 +57,8 @@ public class ProblemService {
         );
     }
 
-    public List<Problem> selectListByTags(int[] tagsId) {
-        var problemsIdList = problemWithTagsService.selectProblemsIdByTags(tagsId);
+    public List<Problem> selectListByTags(ArrayList<Integer> tagsIdList) {
+        var problemsIdList = problemWithTagsService.selectProblemsIdByTags(tagsIdList);
 
         return problemMapper.selectList(
             new QueryWrapper<Problem>().in("pid", problemsIdList)
@@ -63,13 +66,38 @@ public class ProblemService {
     }
 
     // Wrapper
+    public HashMap<String, Object> problemSimpleWrapper(Problem problem) {
+        var data = new HashMap<String, Object>();
+
+        var tidList = problemWithTagsService.selectTagsByPid(problem.getPid());
+        data.put("tag", tidList);
+
+        data.put("pid", problem.getPid());
+        data.put("content", problem.getProblemContent());
+        data.put("view_count", problem.getViewCount());
+        data.put("solution_count", problem.getSolutionCount());
+        data.put("created_at", problem.getCreatedAt());
+        return data;
+    }
+
+    // Wrapper
     public HashMap<String, Object> problemWrapper(Problem problem) {
         var data = new HashMap<String, Object>();
-        data.put("pid", problem.getPid());
-        User user = userService.selectOneByUid(problem.getUid());
 
-        //TODO
-        data.put("user_name", user.getUid());
+        User user = userService.selectOneByUid(problem.getUid());
+        data.put("user", userService.userWrapper(user));
+
+        var tidList = problemWithTagsService.selectTagsByPid(problem.getPid());
+        data.put("tag", tidList);
+
+        var solution = new ArrayList<HashMap<String, Object>>();
+        var solutionList = solutionService.selectListByPid(problem.getPid());
+        for(Solution s : solutionList) {
+            solution.add(solutionService.solutionWrapper(s));
+        }
+        data.put("solution", solution);
+
+        data.put("pid", problem.getPid());
         data.put("content", problem.getProblemContent());
         data.put("created_at", problem.getCreatedAt());
         return data;
