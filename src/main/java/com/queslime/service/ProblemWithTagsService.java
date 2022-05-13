@@ -6,6 +6,8 @@ import com.queslime.entity.ProblemWithTags;
 import com.queslime.mapper.ProblemWithTagsMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -20,16 +22,27 @@ public class ProblemWithTagsService {
         return problemWithTagsMapper.insert(problemWithTags);
     }
 
-    public int[] selectProblemsIdByTags(int[] tagsId) {
+    public ArrayList<Integer> selectProblemsIdByTags(ArrayList<Integer> tagsIdList) {
         List<ProblemWithTags> pwtList = problemWithTagsMapper.selectList(
-            new QueryWrapper<ProblemWithTags>().in("tid", tagsId)
+            new QueryWrapper<ProblemWithTags>().in("tid", tagsIdList)
         );
         
-        int[] problemsIdList = new int[pwtList.size()];
-        int index = 0;
+        var problemsIdList = new ArrayList<Integer>();
         for (ProblemWithTags pwt : pwtList) {
-            problemsIdList[index++] = pwt.getPid();
+            problemsIdList.add(pwt.getPid());
         }
         return problemsIdList;
+    }
+
+    public ArrayList<Integer> selectTagsByPid(Integer pid) {
+        List<ProblemWithTags> pwtList = problemWithTagsMapper.selectList(
+            new QueryWrapper<ProblemWithTags>().eq("pid", pid)
+        );
+
+        var tidList = new ArrayList<Integer>();
+        for (ProblemWithTags pwt : pwtList) {
+            tidList.add(pwt.getTid());
+        }
+        return tidList;
     }
 }
