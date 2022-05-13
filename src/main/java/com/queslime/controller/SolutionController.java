@@ -90,7 +90,7 @@ public class SolutionController {
     }
 
     @RequestMapping(value = "/get/solutions")
-    public Result getSolutionsBy(@RequestParam(value = "uid", defaultValue = "") String uidString) {
+    public Result getSolutionsByUid(@RequestParam(value = "uid", defaultValue = "") String uidString) {
         Result result = new Result();
 
         if ("".equals(uidString)) {
