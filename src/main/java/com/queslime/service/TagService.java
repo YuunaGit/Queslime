@@ -8,6 +8,7 @@ import com.queslime.mapper.TagMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -30,6 +31,5 @@ public class TagService {
             new QueryWrapper<Tag>().eq("tag_type", typeId)
         );
     }
-
 
 }
