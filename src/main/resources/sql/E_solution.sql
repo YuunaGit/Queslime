@@ -4,5 +4,6 @@ create table e_solution(
     pid int not null,
     uid int not null,
     solution_content text not null,
+    like_count int not null,
     created_at timestamp default current_timestamp not null
 );
