@@ -6,6 +6,7 @@ import com.queslime.mapper.SolutionMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,13 +25,37 @@ public class SolutionService {
     }
 
     // Retrieve
-    public Solution selectOneBySid(int sid) {
+    public Solution selectOneBySid(long sid) {
         return solutionMapper.selectById(sid);
     }
 
+    // Retrieve
+    public long selectCount() {
+        return solutionMapper.selectCount(null);
+    }
+
+    // Retrieve
     public List<Solution> selectListByPid(int pid) {
         return solutionMapper.selectList(
             new QueryWrapper<Solution>().eq("pid", pid)
         );
+    }
+
+    // Retrieve
+    public List<Solution> selectOneByUid(long uid) {
+        return solutionMapper.selectList(
+          new QueryWrapper<Solution>().eq("uid", uid)
+        );
+    }
+
+    // Wrapper
+    public HashMap<String, Object> solutionWrapper(Solution solution) {
+        var data = new HashMap<String, Object>();
+        data.put("sid", solution.getSid());
+        data.put("uid", solution.getUid());
+        data.put("content", solution.getSolutionContent());
+        data.put("created_at", solution.getCreatedAt());
+        data.put("like_count", solution.getLikeCount());
+        return data;
     }
 }
