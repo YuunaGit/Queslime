@@ -208,8 +208,13 @@ public class ProblemController {
     }
 
     @RequestMapping(value = "/get/problem")
-    public Result getProblem(@RequestParam(value = "pid", defaultValue = "")String pidString) {
+    public Result getProblem(@RequestParam(value = "uid", defaultValue = "")String uidString,
+                             @RequestParam(value = "pid", defaultValue = "")String pidString) {
         Result result = new Result();
+
+        if("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
 
         if ("".equals(pidString)) {
             return result.info(Info.PID_NULL);
