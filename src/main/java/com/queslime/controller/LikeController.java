@@ -10,6 +10,7 @@ import com.queslime.service.UserLikeSolutionService;
 import com.queslime.service.UserService;
 import com.queslime.utils.Result;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +28,10 @@ public class LikeController {
     @Resource
     private UserLikeSolutionService userLikeSolutionService;
 
-    public Result userLikeSolution(@RequestParam(value = "uid", defaultValue = "")String uidString,
-                                   @RequestParam(value = "sid", defaultValue = "")String sidString,
-                                   @RequestParam(value = "like", defaultValue = "")String likeString) {
+    @RequestMapping(value = "like")
+    public Result userLikeOneSolution(@RequestParam(value = "uid", defaultValue = "")String uidString,
+                                      @RequestParam(value = "sid", defaultValue = "")String sidString,
+                                      @RequestParam(value = "like", defaultValue = "")String likeString) {
         Result result = new Result();
 
         if("".equals(uidString)) {
