@@ -3,8 +3,10 @@ package com.queslime.controller;
 import com.queslime.entity.Problem;
 import com.queslime.entity.Solution;
 import com.queslime.entity.User;
+import com.queslime.entity.UserLikeSolution;
 import com.queslime.enums.Info;
 import com.queslime.service.SolutionService;
+import com.queslime.service.UserLikeSolutionService;
 import com.queslime.service.UserService;
 import com.queslime.utils.Result;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,9 @@ public class LikeController {
 
     @Resource
     private SolutionService solutionService;
+
+    @Resource
+    private UserLikeSolutionService userLikeSolutionService;
 
     public Result userLikeSolution(@RequestParam(value = "uid", defaultValue = "")String uidString,
                                    @RequestParam(value = "sid", defaultValue = "")String sidString,
@@ -66,13 +71,39 @@ public class LikeController {
             return result.info(Info.LIKE_PARAM_NULL);
         }
 
-        if(like != 1 && like != -1) {
-            return result.info(Info.LIKE_PARAM_NULL);
+        if(like != 1 && like != 0) {
+            return result.info(Info.LIKE_PARAM_ILLEGAL);
         }
 
-        
+        UserLikeSolution uls = userLikeSolutionService.selectOne(uid, sid);
+        if(uls == null && like == 0) {
+            return result.info(Info.CANCEL_LIKE);
+        }
 
+        if(uls != null && like == 1) {
+            return result.info(Info.ALREADY_LIKE);
+        }
 
-        return result;
+        if(uls == null) {
+            var newUls = new UserLikeSolution(uid, sid);
+
+            if(userLikeSolutionService.insert(newUls) == 0) {
+                return result.info(Info.FAIL);
+            }
+        }
+
+        if(uls != null) {
+            if(userLikeSolutionService.delete(uid, sid) == 0) {
+                return result.info(Info.FAIL);
+            }
+        }
+
+        Integer likeCount = userLikeSolutionService.selectLikeCountBySid(sid);
+
+        solution.setLikeCount(likeCount);
+
+        solutionService.update(solution);
+
+        return result.info(Info.SUCCESS);
     }
 }
