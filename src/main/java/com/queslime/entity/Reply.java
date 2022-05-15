@@ -23,4 +23,11 @@ public class Reply {
     private Integer toUid;
     private String replyContent;
     private Timestamp createdAt;
+
+    public Reply(Integer sid, Integer postUid, Integer toUid, String replyContent) {
+        this.sid = sid;
+        this.postUid = postUid;
+        this.toUid = toUid;
+        this.replyContent = replyContent;
+    }
 }
