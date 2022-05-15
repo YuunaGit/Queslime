@@ -6,11 +6,13 @@ import lombok.Getter;
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Info {
-    // Public: Uid, Pid, Tid
+    // Public: Uid, Pid, Tid, Sid
     UID_ILLEGAL(100, "用户UID非法"),
     UID_NOT_EXISTS(101, "用户不存在"),
     PID_ILLEGAL(102, "问题PID非法"),
     PID_NOT_EXISTS(103, "问题不存在"),
+    SID_ILLEGAL(104, "题解PID非法"),
+    SID_NOT_EXISTS(105, "题解不存在"),
 
     // Public: Not null
     UID_NULL(110, "UID不能为空"),
@@ -52,7 +54,13 @@ public enum Info {
     PROBLEM_TAG_ILLEGAL(240, "tag非法格式"),
     PROBLEM_SEARCH_TOO_LONG(241, "搜索内容太长，最多200字"),
     PROBLEM_ORDER_ILLEGAL(242, "搜索顺序格式非法"),
-    PROBLEM_DIFFICULTY_ILLEGAL(243, "难度数值非法");
+    PROBLEM_DIFFICULTY_ILLEGAL(243, "难度数值非法"),
+
+    // Like
+    LIKE_PARAM_NULL(250, "点赞参数不能为空"),
+    LIKE_PARAM_ILLEGAL(251, "点赞参数只能为1或0"),
+    CANCEL_LIKE(252, "你没有点赞过，取消什么？"),
+    ALREADY_LIKE(253, "你已经赞过了，还赞什么？");
 
     private final int code;
     private final String msg;
