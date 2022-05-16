@@ -44,7 +44,7 @@ public class SolutionController {
         }
 
         if ("".equals(solutionContent)) {
-            return result.info(Info.SOLUTION_NULL);
+            return result.info(Info.CONTENT_NULL);
         }
 
         if (solutionContent.length() > 5000) {
