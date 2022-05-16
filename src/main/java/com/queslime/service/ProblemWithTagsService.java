@@ -1,13 +1,11 @@
 package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.queslime.entity.Problem;
 import com.queslime.entity.ProblemWithTags;
 import com.queslime.mapper.ProblemWithTagsMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
