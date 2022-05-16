@@ -58,4 +58,18 @@ public class SolutionService {
         data.put("like_count", solution.getLikeCount());
         return data;
     }
+
+    // Service
+    public int stringToSid(String sidString) {
+        int sid;
+        try {
+            sid = Integer.parseInt(sidString);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+        if(sid < 1) {
+            return 0;
+        }
+        return sid;
+    }
 }
