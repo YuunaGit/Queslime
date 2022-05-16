@@ -22,8 +22,9 @@ public enum Info {
     PROBLEM_NULL(114, "问题不能为空"),
     TAGS_NULL(115, "Tag不能为空"),
     PID_NULL(116, "PID不能为空"),
-    SOLUTION_NULL(117, "题解不能为空"),
+    CONTENT_NULL(117, "内容不能为空"),
     DIFFICULTY_NULL(118, "题目难度不能为空"),
+    SID_NULL(119, "题解SID不能为空"),
 
     // Public: Duplicate
     EMAIL_DUPLICATE(120, "邮箱已被使用"),
@@ -34,6 +35,7 @@ public enum Info {
     USER_NAME_TOO_LONG(211, "UID长度大于30"),
     PROBLEM_CONTENT_TOO_LONG(212, "问题内容大于5000字"),
     SOLUTION_CONTENT_TOO_LONG(213, "题解内容大于5000字"),
+    REPLY_CONTENT_TOO_LONG(214, "回复内容大于500字"),
 
     // Public: Success or Fail
     SUCCESS(200, "成功"),
