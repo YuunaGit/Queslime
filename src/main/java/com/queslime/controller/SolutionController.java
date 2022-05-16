@@ -84,12 +84,12 @@ public class SolutionController {
         long sid = solutionService.selectCount();
         Solution solution = solutionService.selectOneBySid(sid);
 
-        var data = solutionService.solutionWrapper(solution);
+        var data = solutionService.solutionWrapper(user, solution);
 
         return result.info(Info.SUCCESS, data);
     }
 
-    @RequestMapping(value = "/get/solutions")
+    @RequestMapping(value = "/profile/solutions")
     public Result getSolutionsByUid(@RequestParam(value = "uid", defaultValue = "") String uidString) {
         Result result = new Result();
 
@@ -111,7 +111,7 @@ public class SolutionController {
 
         var data = new ArrayList<HashMap<String, Object>>();
         for(Solution s : solutionList) {
-            data.add(solutionService.solutionWrapper(s));
+            data.add(solutionService.solutionWrapper(user, s));
         }
 
         return result.info(Info.SUCCESS, data);
