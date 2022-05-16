@@ -89,7 +89,7 @@ public class ReplyController {
             return result.info(Info.FAIL);
         }
 
-        return result;
+        return result.info(Info.SUCCESS);
     }
 
 }
