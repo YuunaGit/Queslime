@@ -194,10 +194,10 @@ public class ProblemController {
             }
         }
 
-        switch (order){
-            case 0 -> problems.sort(Comparator.comparingInt(Problem::getPid));
+//        switch (order){
+//            case 0 -> problems.sort(Comparator.comparingInt(Problem::getPid));
 //            case 1 -> problems.sort();
-        }
+//        }
 
         var data = new ArrayList<HashMap<String, Object>>();
         for(Problem p : problems) {
@@ -220,6 +220,16 @@ public class ProblemController {
             return result.info(Info.PID_NULL);
         }
 
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User thisUser = userService.selectOneByUid(uid);
+        if (thisUser == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
         int pid = problemService.stringToPid(pidString);
         if (pid == 0) {
             return result.info(Info.PID_ILLEGAL);
@@ -230,7 +240,7 @@ public class ProblemController {
             return result.info(Info.PID_NOT_EXISTS);
         }
 
-        var data = problemService.problemWrapper(problem);
+        var data = problemService.problemWrapper(thisUser, problem);
 
         return result.info(Info.SUCCESS, data);
     }
