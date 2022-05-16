@@ -39,7 +39,7 @@ public class LikeController {
         }
 
         if("".equals(sidString)) {
-            return result.info(Info.SOLUTION_NULL);
+            return result.info(Info.CONTENT_NULL);
         }
 
         if("".equals(likeString)) {
