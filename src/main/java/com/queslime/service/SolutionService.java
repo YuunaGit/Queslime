@@ -2,6 +2,7 @@ package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.queslime.entity.Solution;
+import com.queslime.entity.User;
 import com.queslime.mapper.SolutionMapper;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ import java.util.List;
 public class SolutionService {
     @Resource
     private SolutionMapper solutionMapper;
+
+    @Resource
+    private UserLikeSolutionService userLikeSolutionService;
 
     // Create
     public int insert(Solution solution) {
@@ -49,13 +53,18 @@ public class SolutionService {
     }
 
     // Wrapper
-    public HashMap<String, Object> solutionWrapper(Solution solution) {
+    public HashMap<String, Object> solutionWrapper(User thisUser, Solution solution) {
         var data = new HashMap<String, Object>();
         data.put("sid", solution.getSid());
         data.put("uid", solution.getUid());
         data.put("content", solution.getSolutionContent());
         data.put("created_at", solution.getCreatedAt());
         data.put("like_count", solution.getLikeCount());
+        if(userLikeSolutionService.selectOne(thisUser.getUid(), solution.getSid()) != null) {
+            data.put("is_liked", true);
+        } else {
+            data.put("is_liked", false);
+        }
         return data;
     }
 
