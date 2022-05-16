@@ -81,7 +81,7 @@ public class ProblemService {
     }
 
     // Wrapper
-    public HashMap<String, Object> problemWrapper(Problem problem) {
+    public HashMap<String, Object> problemWrapper(User thisUser, Problem problem) {
         var data = new HashMap<String, Object>();
 
         User user = userService.selectOneByUid(problem.getUid());
@@ -93,7 +93,7 @@ public class ProblemService {
         var solution = new ArrayList<HashMap<String, Object>>();
         var solutionList = solutionService.selectListByPid(problem.getPid());
         for(Solution s : solutionList) {
-            solution.add(solutionService.solutionWrapper(s));
+            solution.add(solutionService.solutionWrapper(thisUser, s));
         }
         data.put("solution", solution);
 
