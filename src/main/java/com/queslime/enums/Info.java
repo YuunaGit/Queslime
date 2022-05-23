@@ -62,7 +62,10 @@ public enum Info {
     LIKE_PARAM_NULL(250, "点赞参数不能为空"),
     LIKE_PARAM_ILLEGAL(251, "点赞参数只能为1或0"),
     CANCEL_LIKE(252, "你没有点赞过，取消什么？"),
-    ALREADY_LIKE(253, "你已经赞过了，还赞什么？");
+    ALREADY_LIKE(253, "你已经赞过了，还赞什么？"),
+
+    // Study
+    STUDY_PARAM_ILLEGAL(260, "携带参数应为1或0");
 
     private final int code;
     private final String msg;
