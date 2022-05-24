@@ -15,11 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -41,7 +37,7 @@ public class StudyController {
     @RequestMapping(value = "/next")
     public Result getNextProblem(@RequestParam(value = "uid", defaultValue = "")String uidString,
                                  @RequestParam(value = "pid", defaultValue = "")String pidString,
-            @RequestParam(value = "pass", defaultValue = "") String passString) {
+                                 @RequestParam(value = "pass", defaultValue = "") String passString) {
         Result result = new Result();
 
         if ("".equals(pidString)) {
@@ -100,31 +96,40 @@ public class StudyController {
 
         System.out.println(Arrays.deepToString(modelMap));
 
-        var recommendTids = new ArrayList<Integer>();
+        double[] passRate = new double[26];
 
-        int maxTid = 0;
-        for (int i = 0; i < modelMap[0].length; i++) {
-            int thisMinus = modelMap[1][i] - modelMap[0][i];
-            int maxMinus = modelMap[1][maxTid] - modelMap[0][maxTid];
-            if (thisMinus > maxMinus) {
-                maxTid = i;
+        for (int i = 1; i < modelMap[0].length; i++) {
+            passRate[i] = 1.0 * modelMap[0][i] / (modelMap[0][i] + modelMap[1][i]);
+        }
+
+        int maxPassRateTid= 0;
+        int minPassRateTid = 100;
+        for (int i = 1; i < passRate.length; i++) {
+            if (passRate[i] > maxPassRateTid) {
+                maxPassRateTid = i;
+            } else if (passRate[i] < minPassRateTid & passRate[i] != 0) {
+                minPassRateTid = i;
             }
         }
 
-        var tempTid = new ArrayList<Integer>(1);
-        tempTid.add(maxTid);
+        System.out.println(Arrays.toString(passRate));
+        System.out.println(maxPassRateTid);
+        System.out.println(minPassRateTid);
 
-        var pidList = problemWithTagsService.selectProblemsIdByTags(tempTid);
-
-        Integer returnPid = pidList.get(pidList.size() - 1);
-
-        pidList.removeAll(passPidList);
-
-        if (!pidList.isEmpty()) {
-            returnPid = pidList.get(pidList.size() - 1);
+        var returnTids = new ArrayList<Integer>();
+        for(int i = 1; i <= 25; i++) {
+            returnTids.add(i);
         }
 
-        Problem nextProblem = problemService.selectOneByPid(pid);
+        var returnPids = problemWithTagsService.selectProblemsIdByTags(returnTids);
+
+        System.out.println(returnPids);
+
+        var r = new Random();
+
+        var returnPid = returnPids.get(r.nextInt(returnPids.size()));
+
+        Problem nextProblem = problemService.selectOneByPid(returnPid);
 
         var data = problemService.problemWrapper(user, nextProblem);
 
@@ -155,64 +160,79 @@ public class StudyController {
         int passProblemCount = passList.size();
         int notPassProblemCount = notPassList.size();
         int studyProblemCount = passProblemCount + notPassProblemCount;
-        double totalPassRate = passProblemCount / studyProblemCount;
+        double totalPassRate = 1.0 * passProblemCount / studyProblemCount;
+        String totalPassRateStr = String.format("%.2f", totalPassRate);
 
         int[][] modelMap = getModelMap(passList, notPassList);
 
-        int passCountMaxTagId = 0;
-        int notPassCountMaxTagId = 0;
+        int passCountMaxTagId = 1;
+        int notPassCountMaxTagId = 1;
 
-        for (int i = 0; i < modelMap[0].length; i++) {
+        for (int i = 1; i < modelMap[0].length; i++) {
             int thisPassCount = modelMap[0][i];
             int thisNotPassCount = modelMap[1][i];
             if (thisPassCount > modelMap[0][passCountMaxTagId]) {
                 passCountMaxTagId = i;
             }
-            if (thisNotPassCount > modelMap[0][notPassCountMaxTagId]) {
+            if (thisNotPassCount > modelMap[1][notPassCountMaxTagId]) {
                 notPassCountMaxTagId = i;
             }
         }
 
-        double[] passRate = new double[100];
+        double[] passRate = new double[26];
 
-        for (int i = 0; i < modelMap[0].length; i++) {
-            passRate[i] = modelMap[0][i] / (modelMap[0][i] + modelMap[1][i]);
+        for (int i = 1; i < modelMap[0].length; i++) {
+            passRate[i] = 1.0 * modelMap[0][i] / (modelMap[0][i] + modelMap[1][i]);
         }
 
         double maxPassRate = 0;
+        int maxPassTid = 1;
         double minPassRate = 100;
-        for (double d : passRate) {
-            if (d > maxPassRate) {
-                maxPassRate = d;
-            } else if (d < minPassRate & d != 0) {
-                minPassRate = d;
+        int minPassTid = 1;
+        for (int i = 0; i < passRate.length; i++) {
+            if (passRate[i] > maxPassRate) {
+                maxPassRate = passRate[i];
+                maxPassTid = i;
+            } else if (passRate[i] < minPassRate & passRate[i] != 0) {
+                minPassRate = passRate[i];
+                minPassTid = i;
             }
         }
 
-        var passRateTreeSet = TreeSet<>
-        for (int i = 0; i < 2; i++) {
-            int thisMinPassRate
-            for (int j = 0; j < modelMap.length; j++) {
-                
-            }
-        }
+        String maxPassRateStr = String.format("%.2f", maxPassRate);
+        String minPassRateStr = String.format("%.2f", minPassRate);
 
-        // 做了多少题 studyProblemCount
-        // 综合正确率 totalPassRate
-        // 你对某TAG的题目做对的次数最多，会减少此类推荐 passCountMaxTagId
-        // 你对某TAG的题目做错的次数最少，会增肌推荐 notPassCountMaxTagId
-        // 正确率最多的TAG maxPassRate
-        // 正确率最低的TAG minPassRate
+//        var passRateTreeSet = new TreeSet<>();
+//        for (int i = 0; i < 2; i++) {
+//            int thisMinPassRate;
+//            for (int j = 0; j < modelMap.length; j++) {
+//
+//            }
+//        }
 
-        return result;
+//        System.out.println(studyProblemCount);
+//        System.out.println(totalPassRate);
+//        System.out.println(passCountMaxTagId);
+//        System.out.println(notPassCountMaxTagId);
+//        System.out.println(maxPassRate + "\n\t" + maxPassTid);
+//        System.out.println(minPassRate + "\n\t" + minPassTid);
+
+        var data = new HashMap<String, Object>();
+        data.put("total_study_problem_count", studyProblemCount);
+        data.put("total_study_problem_pass_rate", totalPassRateStr);
+        data.put("pass_count_max_tag_id", passCountMaxTagId);
+        data.put("pass_count_min_tag_id", notPassCountMaxTagId);
+        data.put("max_pass_rate", maxPassRateStr);
+        data.put("tag_id_of_max_pass_rate", maxPassTid);
+        data.put("min_pass_rate", minPassRateStr);
+        data.put("tag_id_of_min_pass_rate", minPassTid);
+        data.put("desc", "total_study_problem_count：该用户总共做了多少题；total_study_problem_pass_rate：该用户总和做题通过率；pass_count_max_tag_id：该用户做对数量最多的是哪一种题型（tag id）；" +
+                "pass_count_min_tag_id：该用户做错次数最少的是哪种题型；该用户做${tag_id_of_max_pass_rate}题型的题目通过率最高，是${max_pass_rate}；该用户做${tag_id_of_min_pass_rate}题型的题目通过率最低，是${min_pass_rate}；");
+
+        return result.info(Info.SUCCESS, data);
     }
 
     private int[][] getModelMap(ArrayList<Study> passList, ArrayList<Study> notPassList) {
-        ArrayList<Integer> passPidList = new ArrayList<>();
-        for (Study s : passList) {
-            passPidList.add(s.getPid());
-        }
-
         var passTagsIdList = new ArrayList<Integer>();
         for (Study s : passList) {
             passTagsIdList.addAll(problemWithTagsService.selectTagsByPid(s.getPid()));
@@ -223,7 +243,7 @@ public class StudyController {
             notPassTagsIdList.addAll(problemWithTagsService.selectTagsByPid(s.getPid()));
         }
 
-        var modelMap = new int[2][100];
+        var modelMap = new int[2][26];
 
         for (Integer tid : passTagsIdList) {
             modelMap[0][tid] += 1;
