@@ -3,7 +3,6 @@ package com.queslime.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.queslime.entity.Problem;
 import com.queslime.entity.Solution;
-import com.queslime.entity.Tag;
 import com.queslime.entity.User;
 import com.queslime.mapper.ProblemMapper;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class ProblemService {
 
     // Update
     public int update(Problem problem) {
-        return problemMapper.insert(problem);
+        return problemMapper.updateById(problem);
     }
 
     // Retrieve
@@ -99,6 +98,8 @@ public class ProblemService {
 
         data.put("pid", problem.getPid());
         data.put("content", problem.getProblemContent());
+        data.put("view_count", problem.getViewCount());
+        data.put("difficulty", problem.getDifficulty());
         data.put("created_at", problem.getCreatedAt());
         return data;
     }
