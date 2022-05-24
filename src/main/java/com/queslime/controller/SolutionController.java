@@ -71,6 +71,9 @@ public class SolutionController {
             return result.info(Info.PID_NOT_EXISTS);
         }
 
+        problem.setSolutionCount(problem.getSolutionCount());
+        problemService.update(problem);
+
         Solution newSolution = new Solution(
             problem.getPid(),
             user.getUid(),
