@@ -8,6 +8,7 @@ import com.queslime.service.ProblemService;
 import com.queslime.service.ProblemWithTagsService;
 import com.queslime.service.UserService;
 import com.queslime.utils.Result;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -100,49 +101,49 @@ public class ProblemController {
         return result.info(Info.SUCCESS);
     }
 
-    @RequestMapping(value = "/add/tag/to")
-    public Result addTagsToProblem(@RequestParam(value = "pid", defaultValue = "")String pidString,
-                                   @RequestParam(value = "tags", defaultValue = "") String[] tagsIdString) {
-        Result result = new Result();
-                                    
-        if ("".equals(pidString)) {
-            return result.info(Info.PID_NULL);
-        }
-
-        if (tagsIdString.length == 0) {
-            return result.info(Info.TAGS_NULL);
-        }
-
-        int pid = problemService.stringToPid(pidString);
-        if (pid == 0) {
-            return result.info(Info.PID_ILLEGAL);
-        }
-
-        Problem problem = problemService.selectOneByPid(pid);
-        if (problem == null) {
-            return result.info(Info.PID_NOT_EXISTS);
-        }
-
-        int[] tagsId;
-        int tagsCount = tagsIdString.length;
-        tagsId = new int[tagsCount];
-        try {
-            for (int i = 0; i < tagsCount; i++) {
-                tagsId[i] = Integer.parseInt(tagsIdString[i]);
-            }
-        } catch (NumberFormatException e) {
-            return result.info(Info.PROBLEM_TAG_ILLEGAL);
-        }
-        
-        for (int tid : tagsId) {
-            ProblemWithTags pwt = new ProblemWithTags(pid, tid);
-            if (problemWithTagsService.insert(pwt) == 0) {
-                return result.info(Info.FAIL);
-            }
-        }
-
-        return result.info(Info.SUCCESS);
-    }
+//    @RequestMapping(value = "/add/tag/to")
+//    public Result addTagsToProblem(@RequestParam(value = "pid", defaultValue = "")String pidString,
+//                                   @RequestParam(value = "tags", defaultValue = "") String[] tagsIdString) {
+//        Result result = new Result();
+//
+//        if ("".equals(pidString)) {
+//            return result.info(Info.PID_NULL);
+//        }
+//
+//        if (tagsIdString.length == 0) {
+//            return result.info(Info.TAGS_NULL);
+//        }
+//
+//        int pid = problemService.stringToPid(pidString);
+//        if (pid == 0) {
+//            return result.info(Info.PID_ILLEGAL);
+//        }
+//
+//        Problem problem = problemService.selectOneByPid(pid);
+//        if (problem == null) {
+//            return result.info(Info.PID_NOT_EXISTS);
+//        }
+//
+//        int[] tagsId;
+//        int tagsCount = tagsIdString.length;
+//        tagsId = new int[tagsCount];
+//        try {
+//            for (int i = 0; i < tagsCount; i++) {
+//                tagsId[i] = Integer.parseInt(tagsIdString[i]);
+//            }
+//        } catch (NumberFormatException e) {
+//            return result.info(Info.PROBLEM_TAG_ILLEGAL);
+//        }
+//
+//        for (int tid : tagsId) {
+//            ProblemWithTags pwt = new ProblemWithTags(pid, tid);
+//            if (problemWithTagsService.insert(pwt) == 0) {
+//                return result.info(Info.FAIL);
+//            }
+//        }
+//
+//        return result.info(Info.SUCCESS);
+//    }
 
     @RequestMapping(value = "/get/problems")
     public Result getProblemsBy(@RequestParam(value = "search", defaultValue = "")String search,
@@ -151,14 +152,14 @@ public class ProblemController {
         Result result = new Result();
 
         // 0: new, 1: hot
-        int order = 0;
-        if(!"".equals(orderString)) {
-            try {
-                order = Integer.parseInt(orderString);
-            } catch (NumberFormatException e) {
-                return result.info(Info.PROBLEM_ORDER_ILLEGAL);
-            }
-        }
+//        int order = 0;
+//        if(!"".equals(orderString)) {
+//            try {
+//                order = Integer.parseInt(orderString);
+//            } catch (NumberFormatException e) {
+//                return result.info(Info.PROBLEM_ORDER_ILLEGAL);
+//            }
+//        }
 
         boolean hasSearch = !"".equals(search);
         boolean hasTags = tidListString.length != 0;
@@ -238,6 +239,11 @@ public class ProblemController {
         Problem problem = problemService.selectOneByPid(pid);
         if (problem == null) {
             return result.info(Info.PID_NOT_EXISTS);
+        }
+
+        problem.setViewCount(problem.getViewCount() + 1);
+        if(problemService.update(problem) == 0) {
+            return result.info(Info.FAIL);
         }
 
         var data = problemService.problemWrapper(thisUser, problem);
