@@ -18,6 +18,9 @@ public class SolutionService {
     @Resource
     private UserLikeSolutionService userLikeSolutionService;
 
+    @Resource
+    private ReplyService replyService;
+
     // Create
     public int insert(Solution solution) {
         return solutionMapper.insert(solution);
@@ -40,16 +43,12 @@ public class SolutionService {
 
     // Retrieve
     public List<Solution> selectListByPid(int pid) {
-        return solutionMapper.selectList(
-            new QueryWrapper<Solution>().eq("pid", pid)
-        );
+        return solutionMapper.selectList(new QueryWrapper<Solution>().eq("pid", pid));
     }
 
     // Retrieve
     public List<Solution> selectOneByUid(long uid) {
-        return solutionMapper.selectList(
-          new QueryWrapper<Solution>().eq("uid", uid)
-        );
+        return solutionMapper.selectList(new QueryWrapper<Solution>().eq("uid", uid));
     }
 
     // Wrapper
@@ -65,6 +64,10 @@ public class SolutionService {
         } else {
             data.put("is_liked", false);
         }
+
+        var replyList = replyService.selectListBySid(solution.getSid());
+        data.put("reply", replyList);
+
         return data;
     }
 
