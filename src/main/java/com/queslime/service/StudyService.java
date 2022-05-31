@@ -20,6 +20,12 @@ public class StudyService {
         return studyMapper.insert(study);
     }
 
+    // Retrieve
+    public List<Study> selectListByUid(long uid) {
+        return studyMapper.selectList(
+                new QueryWrapper<Study>().eq("uid", uid)
+        );
+    }
     
     // Retrieve
     public List<Study> selectPassListByUid(long uid) {
@@ -32,5 +38,11 @@ public class StudyService {
         return studyMapper.selectList(
                 new QueryWrapper<Study>().eq("uid", uid).eq("pass", 0));
     }
-    
+
+    public long selectCountDiffByUid(long uid, int pass, int diff) {
+        return studyMapper.selectCount(
+                new QueryWrapper<Study>().eq("uid", uid).eq("pass", pass).eq("difficulty", diff)
+        );
+    }
+
 }
