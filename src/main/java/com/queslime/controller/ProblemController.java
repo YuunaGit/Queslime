@@ -250,5 +250,49 @@ public class ProblemController {
 
         return result.info(Info.SUCCESS, data);
     }
+
+    @RequestMapping(value = "/update/problem")
+    public Result updateProblem(@RequestParam(value = "pid", defaultValue = "")String pidString,
+                                @RequestParam(value = "uid", defaultValue = "")String uidString,
+                                @RequestParam(value = "content", defaultValue = "")String newContent) {
+        Result result = new Result();
+
+        if("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        if ("".equals(pidString)) {
+            return result.info(Info.PID_NULL);
+        }
+
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        int pid = problemService.stringToPid(pidString);
+        if (pid == 0) {
+            return result.info(Info.PID_ILLEGAL);
+        }
+
+        Problem problem = problemService.selectOneByPid(pid);
+        if (problem == null) {
+            return result.info(Info.PID_NOT_EXISTS);
+        }
+
+        if(!user.getUid().equals(problem.getUid())) {
+            return result.info(Info.UPDATE_NO_PERMIT);
+        }
+
+        problem.setProblemContent(newContent);
+        problemService.update(problem);
+
+        return result.info(Info.SUCCESS);
+    }
     
 }
