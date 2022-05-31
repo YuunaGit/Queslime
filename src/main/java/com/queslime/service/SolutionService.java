@@ -1,12 +1,14 @@
 package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.queslime.entity.Reply;
 import com.queslime.entity.Solution;
 import com.queslime.entity.User;
 import com.queslime.mapper.SolutionMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,6 +22,9 @@ public class SolutionService {
 
     @Resource
     private ReplyService replyService;
+
+    @Resource
+    private UserService userService;
 
     // Create
     public int insert(Solution solution) {
@@ -47,8 +52,12 @@ public class SolutionService {
     }
 
     // Retrieve
-    public List<Solution> selectOneByUid(long uid) {
+    public List<Solution> selectListByUid(long uid) {
         return solutionMapper.selectList(new QueryWrapper<Solution>().eq("uid", uid));
+    }
+
+    public long selectSolutionCountByPid(long pid) {
+        return solutionMapper.selectCount(new QueryWrapper<Solution>().eq("pid", pid));
     }
 
     // Wrapper
@@ -56,6 +65,8 @@ public class SolutionService {
         var data = new HashMap<String, Object>();
         data.put("sid", solution.getSid());
         data.put("uid", solution.getUid());
+        User user = userService.selectOneByUid(solution.getUid());
+        data.put("user_name", user.getUserName());
         data.put("content", solution.getSolutionContent());
         data.put("created_at", solution.getCreatedAt());
         data.put("like_count", solution.getLikeCount());
@@ -65,8 +76,13 @@ public class SolutionService {
             data.put("is_liked", false);
         }
 
+        var replyWrapperList = new ArrayList<HashMap<String, Object>>();
+
         var replyList = replyService.selectListBySid(solution.getSid());
-        data.put("reply", replyList);
+        for(Reply r : replyList) {
+            replyWrapperList.add(replyService.replyWrapper(r));
+        }
+        data.put("reply", replyWrapperList);
 
         return data;
     }
