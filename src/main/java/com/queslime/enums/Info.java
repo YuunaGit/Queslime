@@ -65,7 +65,10 @@ public enum Info {
     ALREADY_LIKE(253, "你已经赞过了，还赞什么？"),
 
     // Study
-    STUDY_PARAM_ILLEGAL(260, "携带参数应为1或0");
+    STUDY_PARAM_ILLEGAL(260, "携带参数应为1或0"),
+
+    // Update
+    UPDATE_NO_PERMIT(270, "你没有权限更改此问题");
 
     private final int code;
     private final String msg;
