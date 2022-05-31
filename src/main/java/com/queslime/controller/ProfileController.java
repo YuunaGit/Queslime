@@ -1,5 +1,7 @@
 package com.queslime.controller;
 
+import com.queslime.entity.Problem;
+import com.queslime.entity.Solution;
 import com.queslime.entity.User;
 import com.queslime.enums.Info;
 import com.queslime.enums.entityEnum.UserState;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @CrossOrigin
 @RestController
@@ -129,4 +133,5 @@ public class ProfileController {
 
         return result.info(Info.SUCCESS);
     }
+
 }
