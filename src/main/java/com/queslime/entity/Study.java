@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @ToString
@@ -15,10 +17,13 @@ public class Study {
     private Integer uid;
     private Integer pid;
     private Integer pass;
-    
-    public Study(Integer uid, Integer pid, Integer pass) {
+    private Integer difficulty;
+    private Timestamp createdAt;
+
+    public Study(Integer uid, Integer pid, Integer pass, Integer difficulty) {
         this.uid = uid;
         this.pid = pid;
         this.pass = pass;
+        this.difficulty = difficulty;
     }
 }
