@@ -71,9 +71,6 @@ public class SolutionController {
             return result.info(Info.PID_NOT_EXISTS);
         }
 
-        problem.setSolutionCount(problem.getSolutionCount());
-        problemService.update(problem);
-
         Solution newSolution = new Solution(
             problem.getPid(),
             user.getUid(),
@@ -83,6 +80,9 @@ public class SolutionController {
         if (solutionService.insert(newSolution) == 0) {
             return result.info(Info.FAIL);
         }
+
+        problem.setSolutionCount((int)solutionService.selectSolutionCountByPid(problem.getPid()));
+        problemService.update(problem);
 
         long sid = solutionService.selectCount();
         Solution solution = solutionService.selectOneBySid(sid);
@@ -110,7 +110,7 @@ public class SolutionController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        var solutionList = solutionService.selectOneByUid(user.getUid());
+        var solutionList = solutionService.selectListByUid(user.getUid());
 
         var data = new ArrayList<HashMap<String, Object>>();
         for(Solution s : solutionList) {
@@ -118,5 +118,49 @@ public class SolutionController {
         }
 
         return result.info(Info.SUCCESS, data);
+    }
+
+    @RequestMapping(value = "/update/solution")
+    public Result updateSolution(@RequestParam(value = "sid", defaultValue = "")String sidString,
+                                 @RequestParam(value = "uid", defaultValue = "")String uidString,
+                                 @RequestParam(value = "content", defaultValue = "")String newContent) {
+        Result result = new Result();
+
+        if ("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        if("".equals(sidString)) {
+            return result.info(Info.SID_NULL);
+        }
+
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        int sid = solutionService.stringToSid(sidString);
+        if (sid == 0) {
+            return result.info(Info.SID_ILLEGAL);
+        }
+
+        Solution solution = solutionService.selectOneBySid(sid);
+        if (solution == null) {
+            return result.info(Info.SID_NOT_EXISTS);
+        }
+
+        if(!user.getUid().equals(solution.getUid())) {
+            return result.info(Info.UPDATE_NO_PERMIT);
+        }
+
+        solution.setSolutionContent(newContent);
+        solutionService.update(solution);
+
+        return result.info(Info.SUCCESS);
     }
 }
