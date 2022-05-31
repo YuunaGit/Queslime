@@ -8,7 +8,6 @@ import com.queslime.service.ProblemService;
 import com.queslime.service.ProblemWithTagsService;
 import com.queslime.service.UserService;
 import com.queslime.utils.Result;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -254,7 +253,8 @@ public class ProblemController {
     @RequestMapping(value = "/update/problem")
     public Result updateProblem(@RequestParam(value = "pid", defaultValue = "")String pidString,
                                 @RequestParam(value = "uid", defaultValue = "")String uidString,
-                                @RequestParam(value = "content", defaultValue = "")String newContent) {
+                                @RequestParam(value = "content", defaultValue = "")String newContent,
+                                @RequestParam(value = "difficulty", defaultValue = "")String difficultyString) {
         Result result = new Result();
 
         if("".equals(uidString)) {
@@ -263,6 +263,10 @@ public class ProblemController {
 
         if ("".equals(pidString)) {
             return result.info(Info.PID_NULL);
+        }
+
+        if("".equals(difficultyString)) {
+            return result.info(Info.DIFFICULTY_NULL);
         }
 
         int uid = userService.stringToUid(uidString);
@@ -289,10 +293,46 @@ public class ProblemController {
             return result.info(Info.UPDATE_NO_PERMIT);
         }
 
+        int difficulty;
+        try {
+            difficulty = Integer.parseInt(difficultyString);
+        } catch (NumberFormatException e) {
+            return result.info(Info.PROBLEM_DIFFICULTY_ILLEGAL);
+        }
+
         problem.setProblemContent(newContent);
+        problem.setDifficulty(difficulty);
         problemService.update(problem);
 
         return result.info(Info.SUCCESS);
+    }
+
+    @RequestMapping(value = "/profile/problems")
+    public Result getSolutionsByUid(@RequestParam(value = "uid", defaultValue = "") String uidString) {
+        Result result = new Result();
+
+        if ("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        var problemsList = problemService.selectListByUid(user.getUid());
+
+        var data = new ArrayList<HashMap<String, Object>>();
+        for(Problem p : problemsList) {
+            data.add(problemService.problemSimpleWrapper(p));
+        }
+
+        return result.info(Info.SUCCESS, data);
     }
     
 }
