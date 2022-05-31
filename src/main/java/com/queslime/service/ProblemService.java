@@ -100,6 +100,7 @@ public class ProblemService {
         data.put("pid", problem.getPid());
         data.put("content", problem.getProblemContent());
         data.put("view_count", problem.getViewCount());
+        data.put("solution_count", problem.getSolutionCount());
         data.put("difficulty", problem.getDifficulty());
         data.put("created_at", problem.getCreatedAt());
         return data;
