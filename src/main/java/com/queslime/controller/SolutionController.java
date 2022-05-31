@@ -114,7 +114,11 @@ public class SolutionController {
 
         var data = new ArrayList<HashMap<String, Object>>();
         for(Solution s : solutionList) {
-            data.add(solutionService.solutionWrapper(user, s));
+            var temp = solutionService.solutionWrapper(user, s);
+            temp.put("pid", s.getPid());
+            Problem problem = problemService.selectOneByPid(s.getPid());
+            temp.put("problem_content", problem.getProblemContent());
+            data.add(temp);
         }
 
         return result.info(Info.SUCCESS, data);
