@@ -34,7 +34,7 @@ public class StudyController {
     @Resource
     private ProblemWithTagsService problemWithTagsService;
 
-    @RequestMapping(value = "/next")
+    @RequestMapping(value = "/study")
     public Result getNextProblem(@RequestParam(value = "uid", defaultValue = "")String uidString,
                                  @RequestParam(value = "pid", defaultValue = "")String pidString,
                                  @RequestParam(value = "pass", defaultValue = "") String passString) {
@@ -83,18 +83,39 @@ public class StudyController {
             return result.info(Info.STUDY_PARAM_ILLEGAL);
         }
 
-        var newStudy = new Study(uid, pid, pass);
+        var newStudy = new Study(user.getUid(), problem.getPid(), pass, problem.getDifficulty());
 
         if (studyService.insert(newStudy) == 0) {
             return result.info(Info.FAIL);
         }
         
+        return result.info(Info.SUCCESS);
+    }
+
+    @RequestMapping(value = "/next/problem")
+    public Result getNextProblem(@RequestParam(value = "uid", defaultValue = "")String uidString) {
+        Result result = new Result();
+
+        if ("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
         var passList = (ArrayList<Study>) studyService.selectPassListByUid(uid);
         var notPassList = (ArrayList<Study>) studyService.selectNotPassListByUid(uid);
 
         int[][] modelMap = getModelMap(passList, notPassList);
 
-        System.out.println(Arrays.deepToString(modelMap));
+//        System.out.println(Arrays.deepToString(modelMap));
 
         double[] passRate = new double[26];
 
@@ -112,9 +133,9 @@ public class StudyController {
             }
         }
 
-        System.out.println(Arrays.toString(passRate));
-        System.out.println(maxPassRateTid);
-        System.out.println(minPassRateTid);
+//        System.out.println(Arrays.toString(passRate));
+//        System.out.println(maxPassRateTid);
+//        System.out.println(minPassRateTid);
 
         var returnTids = new ArrayList<Integer>();
         for(int i = 1; i <= 25; i++) {
@@ -123,7 +144,7 @@ public class StudyController {
 
         var returnPids = problemWithTagsService.selectProblemsIdByTags(returnTids);
 
-        System.out.println(returnPids);
+//        System.out.println(returnPids);
 
         var r = new Random();
 
@@ -157,6 +178,24 @@ public class StudyController {
         var passList = (ArrayList<Study>) studyService.selectPassListByUid(uid);
         var notPassList = (ArrayList<Study>) studyService.selectNotPassListByUid(uid);
 
+        var diff0passNum = studyService.selectCountDiffByUid(uid, 1, 0);
+        var diff0NotPassNum = studyService.selectCountDiffByUid(uid, 0, 0);
+        var diff0PassNotData = new HashMap<String, Long>();
+        diff0PassNotData.put("pass_num", diff0passNum);
+        diff0PassNotData.put("not_pass_num", diff0NotPassNum);
+
+        var diff1passNum = studyService.selectCountDiffByUid(uid, 1, 1);
+        var diff1NotPassNum = studyService.selectCountDiffByUid(uid, 0, 1);
+        var diff1PassNotData = new HashMap<String, Long>();
+        diff1PassNotData.put("pass_num", diff1passNum);
+        diff1PassNotData.put("not_pass_num", diff1NotPassNum);
+
+        var diff2passNum = studyService.selectCountDiffByUid(uid, 1, 2);
+        var diff2NotPassNum = studyService.selectCountDiffByUid(uid, 0, 2);
+        var diff2PassNotData = new HashMap<String, Long>();
+        diff2PassNotData.put("pass_num", diff2passNum);
+        diff2PassNotData.put("not_pass_num", diff2NotPassNum);
+
         int passProblemCount = passList.size();
         int notPassProblemCount = notPassList.size();
         int studyProblemCount = passProblemCount + notPassProblemCount;
@@ -185,49 +224,37 @@ public class StudyController {
             passRate[i] = 1.0 * modelMap[0][i] / (modelMap[0][i] + modelMap[1][i]);
         }
 
-        double maxPassRate = 0;
-        int maxPassTid = 1;
-        double minPassRate = 100;
-        int minPassTid = 1;
-        for (int i = 0; i < passRate.length; i++) {
-            if (passRate[i] > maxPassRate) {
-                maxPassRate = passRate[i];
-                maxPassTid = i;
-            } else if (passRate[i] < minPassRate & passRate[i] != 0) {
-                minPassRate = passRate[i];
-                minPassTid = i;
-            }
+        var everyTagPassRate = new ArrayList<HashMap<Integer, String>>();
+        for(int i = 0; i < passRate.length; i++) {
+            var temp = new HashMap<Integer, String>();
+            temp.put(i + 1, String.format("%.2f", passRate[i]));
+            everyTagPassRate.add(temp);
         }
-
-        String maxPassRateStr = String.format("%.2f", maxPassRate);
-        String minPassRateStr = String.format("%.2f", minPassRate);
-
-//        var passRateTreeSet = new TreeSet<>();
-//        for (int i = 0; i < 2; i++) {
-//            int thisMinPassRate;
-//            for (int j = 0; j < modelMap.length; j++) {
-//
-//            }
-//        }
-
-//        System.out.println(studyProblemCount);
-//        System.out.println(totalPassRate);
-//        System.out.println(passCountMaxTagId);
-//        System.out.println(notPassCountMaxTagId);
-//        System.out.println(maxPassRate + "\n\t" + maxPassTid);
-//        System.out.println(minPassRate + "\n\t" + minPassTid);
 
         var data = new HashMap<String, Object>();
         data.put("total_study_problem_count", studyProblemCount);
         data.put("total_study_problem_pass_rate", totalPassRateStr);
-        data.put("pass_count_max_tag_id", passCountMaxTagId);
-        data.put("pass_count_min_tag_id", notPassCountMaxTagId);
-        data.put("max_pass_rate", maxPassRateStr);
-        data.put("tag_id_of_max_pass_rate", maxPassTid);
-        data.put("min_pass_rate", minPassRateStr);
-        data.put("tag_id_of_min_pass_rate", minPassTid);
-        data.put("desc", "total_study_problem_count：该用户总共做了多少题；total_study_problem_pass_rate：该用户总和做题通过率；pass_count_max_tag_id：该用户做对数量最多的是哪一种题型（tag id）；" +
-                "pass_count_min_tag_id：该用户做错次数最少的是哪种题型；该用户做${tag_id_of_max_pass_rate}题型的题目通过率最高，是${max_pass_rate}；该用户做${tag_id_of_min_pass_rate}题型的题目通过率最低，是${min_pass_rate}；");
+
+//        data.put("pass_count_max_tag_id", passCountMaxTagId);
+//        data.put("pass_count_min_tag_id", notPassCountMaxTagId);
+
+        data.put("every_tag_pass_rate", everyTagPassRate);
+
+        data.put("diff_0_pass_and_not_data", diff0PassNotData);
+        data.put("diff_1_pass_and_not_data", diff1PassNotData);
+        data.put("diff_2_pass_and_not_data", diff2PassNotData);
+
+        var lastPassPid = passList.get(passList.size() - 1).getPid();
+        Problem lastPassProblem = problemService.selectOneByPid(lastPassPid);
+        data.put("last_pass_problem", problemService.problemSimpleWrapper(lastPassProblem));
+
+        var lastNotPassPid = notPassList.get(notPassList.size() - 1).getPid();
+        Problem lastNotPassProblem = problemService.selectOneByPid(lastNotPassPid);
+        data.put("last_not_pass_problem", problemService.problemSimpleWrapper(lastNotPassProblem));
+
+//        data.put("desc", "total_study_problem_count：该用户总共做了多少题；total_study_problem_pass_rate：该用户总和做题通过率；pass_count_max_tag_id：该用户做对数量最多的是哪一种题型（tag id）；" +
+//                "pass_count_min_tag_id：该用户做错次数最少的是哪种题型；该用户做${tag_id_of_max_pass_rate}题型的题目通过率最高，是${max_pass_rate}；该用户做${tag_id_of_min_pass_rate}题型的题目通过率最低，是${min_pass_rate}；" +
+//                "diff0passRate/diff1passRate/diff2passRate：三种难度的通过率");
 
         return result.info(Info.SUCCESS, data);
     }
