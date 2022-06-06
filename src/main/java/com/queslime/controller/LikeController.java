@@ -1,10 +1,10 @@
 package com.queslime.controller;
 
-import com.queslime.entity.Problem;
 import com.queslime.entity.Solution;
 import com.queslime.entity.User;
 import com.queslime.entity.UserLikeSolution;
 import com.queslime.enums.Info;
+import com.queslime.service.ProblemService;
 import com.queslime.service.SolutionService;
 import com.queslime.service.UserLikeSolutionService;
 import com.queslime.service.UserService;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @CrossOrigin
 @RestController
@@ -27,6 +29,9 @@ public class LikeController {
 
     @Resource
     private UserLikeSolutionService userLikeSolutionService;
+
+    @Resource
+    private ProblemService problemService;
 
     @RequestMapping(value = "like")
     public Result userLikeOneSolution(@RequestParam(value = "uid", defaultValue = "")String uidString,
@@ -107,5 +112,37 @@ public class LikeController {
         solutionService.update(solution);
 
         return result.info(Info.SUCCESS);
+    }
+
+    @RequestMapping(value = "/most/likes")
+    public Result getMostLikeCountSolutions(@RequestParam(value = "uid", defaultValue = "")String uidString) {
+        Result result = new Result();
+
+        if("".equals(uidString)) {
+            return result.info(Info.UID_NULL);
+        }
+
+        int uid = userService.stringToUid(uidString);
+        if (uid == 0) {
+            return result.info(Info.UID_ILLEGAL);
+        }
+
+        User user = userService.selectOneByUid(uid);
+        if (user == null) {
+            return result.info(Info.UID_NOT_EXISTS);
+        }
+
+        var solutionList = (ArrayList<Solution>) solutionService.selectMaxLikeCountSolutionList();
+
+        var data = new ArrayList<HashMap<String, Object>>(3);
+
+        for(int i = 0; i < 5; i++) {
+            Solution s = solutionList.get(i);
+            if(s.getLikeCount() >= 1) {
+                data.add(solutionService.solutionSimpleWrapper(user, s));
+            }
+        }
+
+        return result.info(Info.SUCCESS, data);
     }
 }

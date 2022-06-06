@@ -2,7 +2,6 @@ package com.queslime.controller;
 
 import com.queslime.entity.Problem;
 import com.queslime.entity.Study;
-import com.queslime.entity.Tag;
 import com.queslime.entity.User;
 import com.queslime.enums.Info;
 import com.queslime.service.ProblemService;
@@ -108,47 +107,36 @@ public class StudyController {
             return result.info(Info.UID_NOT_EXISTS);
         }
 
-        var passList = (ArrayList<Study>) studyService.selectPassListByUid(uid);
-        var notPassList = (ArrayList<Study>) studyService.selectNotPassListByUid(uid);
+        var alreadyStudyList = studyService.selectListByUid(user.getUid());
 
-        int[][] modelMap = getModelMap(passList, notPassList);
+        var alreadyStudyListTemp = new HashSet<Integer>();
 
-//        System.out.println(Arrays.deepToString(modelMap));
-
-        double[] passRate = new double[26];
-
-        for (int i = 1; i < modelMap[0].length; i++) {
-            passRate[i] = 1.0 * modelMap[0][i] / (modelMap[0][i] + modelMap[1][i]);
+        for(Study s : alreadyStudyList) {
+            alreadyStudyListTemp.add(s.getPid());
         }
 
-        int maxPassRateTid= 0;
-        int minPassRateTid = 100;
-        for (int i = 1; i < passRate.length; i++) {
-            if (passRate[i] > maxPassRateTid) {
-                maxPassRateTid = i;
-            } else if (passRate[i] < minPassRateTid & passRate[i] != 0) {
-                minPassRateTid = i;
-            }
+        var returnPidList = new ArrayList<Integer>();
+        for(int i = 1; i <= problemService.selectCount(); i++) {
+            returnPidList.add(i);
         }
 
+        returnPidList.removeAll(alreadyStudyListTemp);
+
+//        int[][] modelMap = getModelMap(passList, notPassList);
 //        System.out.println(Arrays.toString(passRate));
 //        System.out.println(maxPassRateTid);
 //        System.out.println(minPassRateTid);
-
-        var returnTids = new ArrayList<Integer>();
-        for(int i = 1; i <= 25; i++) {
-            returnTids.add(i);
-        }
-
-        var returnPids = problemWithTagsService.selectProblemsIdByTags(returnTids);
-
 //        System.out.println(returnPids);
 
         var r = new Random();
 
-        var returnPid = returnPids.get(r.nextInt(returnPids.size()));
+        var returnPid = returnPidList.get(r.nextInt(returnPidList.size()));
 
         Problem nextProblem = problemService.selectOneByPid(returnPid);
+
+        if(nextProblem == null) {
+            nextProblem = problemService.selectOneByPid(r.nextInt(problemService.selectCount() + 1));
+        }
 
         var data = problemService.problemWrapper(user, nextProblem);
 
@@ -226,9 +214,9 @@ public class StudyController {
         }
 
         var everyTagPassRate = new ArrayList<HashMap<Integer, String>>();
-        for(int i = 0; i < passRate.length; i++) {
+        for(int i = 1; i < passRate.length; i++) {
             var temp = new HashMap<Integer, String>();
-            temp.put(i + 1, String.format("%.2f", passRate[i]));
+            temp.put(i, String.format("%.2f", passRate[i]));
             everyTagPassRate.add(temp);
         }
 
@@ -245,13 +233,21 @@ public class StudyController {
         data.put("diff_1_pass_and_not_data", diff1PassNotData);
         data.put("diff_2_pass_and_not_data", diff2PassNotData);
 
-        var lastPassPid = passList.get(passList.size() - 1).getPid();
-        Problem lastPassProblem = problemService.selectOneByPid(lastPassPid);
-        data.put("last_pass_problem", problemService.problemSimpleWrapper(lastPassProblem));
+        if(!passList.isEmpty()) {
+            var lastPassPid = passList.get(passList.size() - 1).getPid();
+            Problem lastPassProblem = problemService.selectOneByPid(lastPassPid);
+            data.put("last_pass_problem", problemService.problemSimpleWrapper(lastPassProblem));
+        } else {
+            data.put("last_pass_problem", null);
+        }
 
-        var lastNotPassPid = notPassList.get(notPassList.size() - 1).getPid();
-        Problem lastNotPassProblem = problemService.selectOneByPid(lastNotPassPid);
-        data.put("last_not_pass_problem", problemService.problemSimpleWrapper(lastNotPassProblem));
+        if(!notPassList.isEmpty()) {
+            var lastNotPassPid = notPassList.get(notPassList.size() - 1).getPid();
+            Problem lastNotPassProblem = problemService.selectOneByPid(lastNotPassPid);
+            data.put("last_not_pass_problem", problemService.problemSimpleWrapper(lastNotPassProblem));
+        } else {
+            data.put("last_not_pass_problem", null);
+        }
 
 //        data.put("desc", "total_study_problem_count：该用户总共做了多少题；total_study_problem_pass_rate：该用户总和做题通过率；pass_count_max_tag_id：该用户做对数量最多的是哪一种题型（tag id）；" +
 //                "pass_count_min_tag_id：该用户做错次数最少的是哪种题型；该用户做${tag_id_of_max_pass_rate}题型的题目通过率最高，是${max_pass_rate}；该用户做${tag_id_of_min_pass_rate}题型的题目通过率最低，是${min_pass_rate}；" +

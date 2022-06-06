@@ -1,5 +1,7 @@
 package com.queslime.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @TableName(schema = "queslime", value = "e_study")
 public class Study {
+    @TableId(type = IdType.AUTO)
+    private Integer studyId;
     private Integer uid;
     private Integer pid;
     private Integer pass;

@@ -1,6 +1,7 @@
 package com.queslime.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.queslime.entity.Problem;
 import com.queslime.entity.Reply;
 import com.queslime.entity.Solution;
 import com.queslime.entity.User;
@@ -25,6 +26,9 @@ public class SolutionService {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private ProblemService problemService;
 
     // Create
     public int insert(Solution solution) {
@@ -58,6 +62,31 @@ public class SolutionService {
 
     public long selectSolutionCountByPid(long pid) {
         return solutionMapper.selectCount(new QueryWrapper<Solution>().eq("pid", pid));
+    }
+
+    public List<Solution> selectMaxLikeCountSolutionList() {
+        return solutionMapper.selectList(new QueryWrapper<Solution>().orderByDesc("like_count"));
+    }
+
+    // Wrapper
+    public HashMap<String, Object> solutionSimpleWrapper(User thisUser, Solution solution) {
+        var data = new HashMap<String, Object>();
+        data.put("sid", solution.getSid());
+        data.put("uid", solution.getUid());
+        data.put("pid", solution.getPid());
+        Problem problem = problemService.selectOneByPid(solution.getPid());
+        data.put("problem_content", problem.getProblemContent());
+        User user = userService.selectOneByUid(solution.getUid());
+        data.put("user_name", user.getUserName());
+        data.put("solution_content", solution.getSolutionContent());
+        data.put("created_at", solution.getCreatedAt());
+        data.put("like_count", solution.getLikeCount());
+        if(userLikeSolutionService.selectOne(thisUser.getUid(), solution.getSid()) != null) {
+            data.put("is_liked", true);
+        } else {
+            data.put("is_liked", false);
+        }
+        return data;
     }
 
     // Wrapper

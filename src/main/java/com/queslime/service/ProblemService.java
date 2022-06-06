@@ -64,6 +64,10 @@ public class ProblemService {
         );
     }
 
+    public List<Problem> selectListByUid(long uid) {
+        return problemMapper.selectList(new QueryWrapper<Problem>().eq("uid", uid));
+    }
+
     // Wrapper
     public HashMap<String, Object> problemSimpleWrapper(Problem problem) {
         var data = new HashMap<String, Object>();
